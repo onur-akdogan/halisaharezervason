@@ -1,41 +1,42 @@
 <?php
 
-Route::redirect('/', '/login');
-Route::get('/home', function () {
-    if (session('status')) {
-        return redirect()->route('admin.home')->with('status', session('status'));
-    }
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CalenderController;
+use App\Http\Controllers\HalisahaController;
 
-    return redirect()->route('admin.home');
+
+use App\Http\Controllers\ProfileController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+Route::get('users', [UserController::class, 'index'])->name('users.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/calenderindex/{id}', [CalenderController::class, 'index'])->name('calender.index');
+    Route::get('/halisahaindex', [HalisahaController::class, 'index'])->name('halisaha.index');
+    Route::get('/halisahaaddpage', [HalisahaController::class, 'addpage'])->name('halisaha.addpage');
+    Route::post('/halisahaadd', [HalisahaController::class, 'add'])->name('halisaha.add');
+
+    
+
+
 });
 
-Auth::routes(['register' => false]);
-
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
-    Route::get('/', 'HomeController@index')->name('home');
-    // Permissions
-    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-    Route::resource('permissions', 'PermissionsController');
-
-    // Roles
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
-
-    // Users
-    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-    Route::resource('users', 'UsersController');
-
-    // Venues
-    Route::delete('venues/destroy', 'VenuesController@massDestroy')->name('venues.massDestroy');
-    Route::resource('venues', 'VenuesController');
-
-    // Events
-    Route::delete('events/destroy', 'EventsController@massDestroy')->name('events.massDestroy');
-    Route::resource('events', 'EventsController');
-
-    // Meetings
-    Route::delete('meetings/destroy', 'MeetingsController@massDestroy')->name('meetings.massDestroy');
-    Route::resource('meetings', 'MeetingsController');
-
-    Route::get('system-calendar', 'SystemCalendarController@index')->name('systemCalendar');
-});
+require __DIR__.'/auth.php';

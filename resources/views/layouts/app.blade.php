@@ -4,6 +4,41 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <style>.select_checkbox .btn {
+            border-radius: 3px;
+            padding: 12px 10px;
+            box-shadow: none;
+            border: 1px solid #d9d9d9;
+            outline: 0;
+            color: #333 !important;
+          }
+          .select_checkbox .bootstrap-select .dropdown-toggle:focus,
+          .select_checkbox
+            .bootstrap-select
+            > select.mobile-device:focus
+            + .dropdown-toggle {
+            outline: 0 !important;
+          }
+          </style>
+          <script>$(document).ready(function () {
+            $(".selectpicker").selectpicker();
+          
+            $(".selectpicker").on(
+              "changed.bs.select",
+              function (e, clickedIndex, isSelected, previousValue) {
+                var selectedCount = $(".selectpicker option:selected").length;
+                if (selectedCount > 4) {
+                  $(".filter-option-inner-inner").text(selectedCount + " selected");
+                } else {
+                  $(".filter-option-inner-inner").text(
+                    $(".selectpicker").val().join(", ")
+                  );
+                }
+              }
+            );
+          });
+          </script>
+          
 <style>
   .bg-dark{
         background-color: 05291c !important;
@@ -24,6 +59,9 @@
 </style>
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+
+
+        
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

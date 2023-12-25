@@ -1,11 +1,6 @@
- @extends('layouts.app')
- @section('main')
-     <!-- Bootstrap CSS CDN -->
-
-     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-     
+@extends('layouts.app')
+@section('main')
+<!-- Bootstrap CSS CDN -->
 
      <div class="py-12">
          <div class="lg:px-8">
@@ -51,16 +46,21 @@
                                     
                                     </div>
                               </div>
-                              offdays
+                               
                 
-                    <select id="example-getting-started" multiple="multiple">
-    <option value="cheese">Cheese</option>
-    <option value="tomatoes">Tomatoes</option>
-    <option value="mozarella">Mozzarella</option>
-    <option value="mushrooms">Mushrooms</option>
-    <option value="pepperoni">Pepperoni</option>
-    <option value="onions">Onions</option>
-</select>
+                              <div class="select_checkbox">
+                                <select class="selectpicker select_checkbox"
+                                name="offdays"
+                                multiple data-live-search="true">
+                                  <option value="0">Pazartesi</option>
+                                  <option value="1">Salı</option>
+                                  <option value="2">Çarşamba</option>
+                                  <option value="3">Perşembe</option>
+                                  <option value="4">Cuma</option>
+                                  <option value="5">Cumartesi</option>
+                                  <option value="6">Pazar</option>
+                                </select>
+                              </div>
 
                             <div class="form-group row">
                               <div class="col-sm-10">
@@ -79,5 +79,5 @@
             $('#datetimepicker1').datetimepicker();
         });
     </script>
-
+ 
  @endsection

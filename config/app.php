@@ -133,6 +133,7 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
+    'toast_position' => env('SWEET_ALERT_TOAST_POSITION', 'center'),
 
     'providers' => [
 
@@ -174,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
     ],
 

@@ -7,7 +7,7 @@ use App\Http\Controllers\HalisahaController;
 
 
 use App\Http\Controllers\ProfileController;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,13 +19,14 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+
 
 Route::get('users', [UserController::class, 'index'])->name('users.index');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+    return view('home');
+})->name('home');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -33,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/halisahaindex', [HalisahaController::class, 'index'])->name('halisaha.index');
     Route::get('/halisahaaddpage', [HalisahaController::class, 'addpage'])->name('halisaha.addpage');
     Route::post('/halisahaadd', [HalisahaController::class, 'add'])->name('halisaha.add');
+    Route::get('/halisahadelete/{id}', [HalisahaController::class, 'delete'])->name('halisaha.delete');
+    Route::get('/halisahaeditpage/{id}', [HalisahaController::class, 'editpage'])->name('halisaha.editpage');
+    Route::post('/halisahaupdate', [HalisahaController::class, 'update'])->name('halisaha.update');
+
 
     
 

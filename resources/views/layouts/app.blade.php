@@ -12,6 +12,18 @@
             outline: 0;
             color: #333 !important;
           }
+          a:hover{
+            color: #0d6126 !important;
+          }
+           .border-indigo-400{
+            border-color: #0d6126 !important;
+ 
+           }
+          .customcolor :hover{
+            
+            color: #0d3461 !important;
+          }
+          --bs-blue: #0d6126;
           .select_checkbox .bootstrap-select .dropdown-toggle:focus,
           .select_checkbox
             .bootstrap-select

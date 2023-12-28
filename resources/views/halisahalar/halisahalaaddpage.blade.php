@@ -29,10 +29,10 @@
                         <form action="{{ route('halisaha.add') }}" method="POST">
                             @csrf
                             <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Halısaha İsmi</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Saha İsmi</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="name" class="form-control" id="inputEmail3"
-                                        placeholder="Halısaha ismi">
+                                        placeholder="Saha ismi">
                                 </div>
                             </div>
                             <div class="form-group row pt-2">
@@ -77,10 +77,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-sm-10">
+                            <div class="col-lg-12" style="height: 200px"></div>
+                            <div class="form-group row pt-5">
+                                <div class="col-sm-11">
+                                    <!-- Boş bir sütun, butonu en sağa yaslamak için -->
+                                </div>
+                                <div class="col-sm-1">
                                     <button type="submit" class="btn btn-primary">Ekle</button>
                                 </div>
+                               
                             </div>
                         </form>
                     </div>

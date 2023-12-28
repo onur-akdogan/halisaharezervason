@@ -9,19 +9,20 @@
                 
                          <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                            <a class="text-decoration-none" href="{{route('home')}}">Gidenyol Randevu</a>    
+                            <a class="text-decoration-none" href="{{route('home')}}"  style="color: #0d6126">
+                                {{ config('app.name', 'Laravel') }}</a>    
                             </h2>
                         </div>
                
                 </div>
   <!-- Navigation Links -->
   <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-    <x-nav-link class="text-decoration-none" :href="route('halisaha.index')"  :active="request()->routeIs('halisaha.index')" >
-       Halısahalar
+    <x-nav-link class="text-decoration-none customcolor" :href="route('halisaha.index')"  :active="request()->routeIs('halisaha.index')" >
+        Sahalar
     </x-nav-link>
 
-    <x-nav-link class="text-decoration-none" :href="route('halisaha.addpage')"  :active="request()->routeIs('halisaha.addpage')" >
-        Halısaha Ekle
+    <x-nav-link class="text-decoration-none customcolor" :href="route('halisaha.addpage')"  :active="request()->routeIs('halisaha.addpage')" >
+        Saha Ekle
      </x-nav-link>
 </div>
                 

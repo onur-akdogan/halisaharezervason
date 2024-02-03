@@ -46,7 +46,7 @@
        
  
             <x-primary-button class="ml-3">
-                {{ __('Log in') }}
+        Giriş yapılacak
             </x-primary-button>
         </div>
     </form>

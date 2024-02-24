@@ -19,7 +19,14 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('optimize:clear');
  
+    return "Cache cleared successfully";
+ });
+
 
 Route::middleware('auth')->group(function () {
  

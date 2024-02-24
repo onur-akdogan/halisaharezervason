@@ -196,17 +196,27 @@ class HalisahaController extends Controller
 
       $resultString = "[" . implode(",", $newoffdays) . "]";
 
-
-      \DB::table("halisaha")->where("id", $request->id)->update([
-         "name" => $request->name,
-         "userId" => \Auth::user()->id,
-         "starthour" => $request->starthour . "",
-         "endhour" => $request->endhour . "",
-
-         "macsuresi" => "00:" . $request->macsuresi . ":00",
-         "offdays" => $resultString,
-
-      ]);
+      if (strlen($request->starthour) == 8) {
+         \DB::table("halisaha")->where("id", $request->id)->update([
+             "name" => $request->name,
+             "userId" => \Auth::user()->id,
+             "starthour" => $request->starthour,
+             "endhour" => $request->endhour,
+     
+             "macsuresi" => "00:" . $request->macsuresi . ":00",
+             "offdays" => $resultString,
+         ]);
+     } else {
+         \DB::table("halisaha")->where("id", $request->id)->update([
+             "name" => $request->name,
+             "userId" => \Auth::user()->id,
+             "starthour" => $request->starthour . ":00",
+             "endhour" => $request->endhour . ":00",
+     
+             "macsuresi" => "00:" . $request->macsuresi . ":00",
+             "offdays" => $resultString,
+         ]);
+     }
       return redirect()->route("halisaha.index")->with('success', 'Güncelleme İşlemi Başarılı');
       ;
 

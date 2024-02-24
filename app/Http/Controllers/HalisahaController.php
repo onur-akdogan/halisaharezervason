@@ -195,7 +195,12 @@ class HalisahaController extends Controller
       }
 
       $resultString = "[" . implode(",", $newoffdays) . "]";
+      $endhour = $request->endhour;
+      if ($request->endhour < "06") {
 
+         $endhour = 24 + intval($request->endhour);
+         $endhour = $endhour . ":00";
+      }
       if (strlen($request->starthour) == 8) {
          \DB::table("halisaha")->where("id", $request->id)->update([
              "name" => $request->name,

@@ -1,4 +1,18 @@
 <x-guest-layout>
+    <div class="flex flex-shrink-0 items-center">
+
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <div class="d-flex align-items-center" id="hovereffect">
+                    <img src="{{asset('logo.png')}}" width="40px" class="mr-2">
+                    <div class="logonameyesil ">YEŞİL</div>
+                    <div class="logonamesaha">SAHA</div>
+                </div>
+            </h2>
+        </div>
+        
+
+    </div>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 

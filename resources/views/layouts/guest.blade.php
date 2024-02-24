@@ -22,8 +22,20 @@
           <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
  
     </head>
+    <style>
+            body{
+                background-image: url('../wallpaper1.jpeg');
+                background-position: 50% 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+            }                            
+ .bg-white{
+    background-color: #ffffffa1 !important;
+ 
+ }
+    </style>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div>
                 <a href="/">
                  

@@ -9,26 +9,29 @@ use Illuminate\Http\Request;
 class CalenderController extends Controller
 {
   public function sms()
-  { 
-   $curl = curl_init();
+  {
+    $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://api.netgsm.com.tr/bulkhttppost.asp',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS => array('usercode' => '8503085771','password' => 'X4.M4R3r','gsmno' => '5545693062','message' => 'testmesajı','msgheader' => 'SEDAT AKSU','filter' => '0','startdate' => '230520221650','stopdate' => '230520221830'),
-));
+    curl_setopt_array(
+      $curl,
+      array(
+        CURLOPT_URL => 'https://api.netgsm.com.tr/bulkhttppost.asp',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('usercode' => '8503085771', 'password' => 'X4.M4R3r', 'gsmno' => '5545693062', 'message' => 'testmesajı', 'msgheader' => 'SEDAT AKSU', 'filter' => '0', 'startdate' => '230520221650', 'stopdate' => '230520221830'),
+      )
+    );
 
-$response = curl_exec($curl);
+    $response = curl_exec($curl);
 
-curl_close($curl);
-echo $response;
-   }
+    curl_close($curl);
+    echo $response;
+  }
   public function index($id)
   {
 
@@ -45,15 +48,17 @@ echo $response;
   }
   public function add(Request $request)
   {
+
     $tarihMetni = $request->date;
     if ($request->aboneTime > 0) {
       for ($i = 0; $i <= $request->aboneTime; $i++) {
 
         // Sonucu yazdırma
+        $tarihMetni = Carbon::parse($tarihMetni);
 
 
         \DB::table("events")->insert([
-          "title" => "Abone", //$request->title,',
+          "title" => "ABONE", //$request->title,',
           "sahaId" => $request->sahaId,
           "date" => $tarihMetni,
           "userName" => $request->userName,
@@ -68,6 +73,7 @@ echo $response;
         $tarihMetni->addWeek();
       }
 
+
       \DB::table("aboneler")->insert([
         "sahaId" => $request->sahaId,
         "startdate" => $request->date,
@@ -80,10 +86,11 @@ echo $response;
       ]);
 
     } else {
+      $tarihMetni = Carbon::parse($tarihMetni);
       \DB::table("events")->insert([
-        "title" => 'Dolu', //$request->title,//'Dolu,
+        "title" => 'DOLU', //$request->title,//'Dolu,
         "sahaId" => $request->sahaId,
-        "date" => $request->date,
+        "date" => $tarihMetni,
         "userName" => $request->userName,
         "userinfo" => $request->userinfo,
         "note" => $request->note,
@@ -116,39 +123,77 @@ echo $response;
     return redirect()->back()->with('success', 'Silme İşlemi Başarılı');
 
   }
-  public function apicalender($id)
+  public function apicalender($id, $addweek)
   {
-    // Halisaha bilgilerini tek seferde al
-    $halisaha = \DB::table('halisaha')
-      ->where('id', $id)
-      ->select('starthour', 'endhour', 'macsuresi', 'offdays', 'id')
-      ->first();
+    $halisaha = \DB::table("halisaha")->where("id", $id)->first();
+    $userId = \Auth::user()->id;
+    $allsaha = \DB::table("halisaha")->where("userId", $userId)->get();
 
-    // Kullanıcıya ait tüm sahaları al
-    $allsaha = \DB::table('halisaha')
-      ->where('userId', \Auth::user()->id)
-      ->get();
+    $acilissaati = $halisaha->starthour;
+    $kapanissaati = $halisaha->endhour;
+    $macsuresi = $halisaha->macsuresi;
+    $offdays = $halisaha->offdays;
 
-    // Events sorgusunu optimize et
-    $events = \DB::table('events')
-      ->where('sahaId', $id)
-      ->where('deleted', 0)
-      ->get();
-    foreach ($events as $item) {
-      if ($item->title == 'Abone') {
-        $item->color = 'red';
+    $events = \DB::table("events")->where("sahaId", $id)->where("deleted", 0)->get();
+    $appointments = json_decode($events, true);
 
-      } else {
-        $item->color = 'blueaccent';
+    // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
+    $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
+    $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
+
+    // Rezervasyon aralığını Carbon nesnesine dönüştürme
+    $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
+
+    // Rezervasyon sürelerini liste olarak oluşturma
+    $reservationTimes = [];
+    $currentReservationTime = $openingTime->copy();
+
+    while ($currentReservationTime->lte($closingTime)) {
+      $reservationStart = $currentReservationTime->format('H:i:s');
+      $currentReservationTime->add($reservationInterval);
+      $reservationEnd = $currentReservationTime->format('H:i:s');
+      $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
+    }
+    $now = \Carbon\Carbon::now();
+
+    // Şu anki tarih ve saat
+    if ($addweek > 0) {
+      for ($i = 0; $i < $addweek; $i++) {
+        $now = $now->addWeek();
       }
+    } elseif ($addweek < 0) {
+      for ($i = 0; $i > $addweek; $i--) {
+        $now = $now->subWeek();
+      }
+    } else {
+      $addweek = 0;
     }
 
+    // Haftanın günlerini ve tarihlerini alalım
+    $filteredDays = [];
+    for ($i = \Carbon\Carbon::SUNDAY; $i <= \Carbon\Carbon::SATURDAY; $i++) {
+      // Haftanın günlerini ve tarihlerini alırken isimlerini de alacağız
+      $day = $now->copy()->startOfWeek()->addDays($i);
+      $filteredDays[] = [
+        'tarih' => $day->format('Y-m-d'),
+        'gun_ismi' => $day->locale('tr')->dayName,
+      ];
+    }
 
     // Gerekli bilgileri döndür
     return response()->json([
       'halisaha' => $halisaha,
+      'appointments' => $appointments,
+      'acilissaati' => $acilissaati,
+      'kapanissaati' => $kapanissaati,
+      'macsuresi' => $macsuresi,
+      'filteredDays' => $filteredDays,
+      'offdays' => $offdays,
       'allsaha' => $allsaha,
-      'events' => $events
+      'events' => $events,
+      'id' => $id,
+      'reservationTimes' => $reservationTimes,
+      'addweek' => $addweek
     ]);
   }
 

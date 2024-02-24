@@ -97,7 +97,7 @@
          }
 
          .box1 {
-             background-color: #0d6126;
+             background-color: #356000;
 
              margin: 0 auto;
              padding: 20px;
@@ -111,18 +111,11 @@
          }
 
          .fc .fc-timegrid-body {
-             min-height: 20% !important;
+             min-height: 100px !important;
 
          }
      </style>
      <style>
-         .calendar .col-lg-12 .fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {}
-
-         .col-lg-12 {
-             height: 100% !important;
-
-         }
-
          .swal2-select {
              background: white;
              color: #000 !important;
@@ -132,8 +125,9 @@
 
 
          }
-         .fc .fc-scrollgrid-liquid{
-            background: #0d6126;
+
+         .fc .fc-scrollgrid-liquid {
+             background: #356000;
          }
 
          .swal2-input,
@@ -174,6 +168,7 @@
                          })
                          .then(response => response.json()) // Yanıtı JSON olarak ayrıştırın
                          .then(data => {
+
                              // Yanıtı işleyin
                              // Gelen yanıtı değişkenlere ekleyin
 
@@ -184,6 +179,38 @@
                              events = data.events;
                              console.log(data.halisaha);
                              sahaid = data.halisaha.id;
+
+                             function toplamDakika(zaman) {
+                                 var zamanParcalari = zaman.split(":");
+                                 var saat = parseInt(zamanParcalari[0]);
+                                 var dakika = parseInt(zamanParcalari[1]);
+                                 return saat * 60 + dakika;
+                             }
+                             var rezervasyonAraligi = data.halisaha.macsuresi;
+
+                             // Açılış ve kapanış saatlerini dakika cinsine dönüştürüyoruz
+                             var acilisDakika = toplamDakika(acilisSaati);
+                             var kapanisDakika = toplamDakika(kapanisSaati);
+
+                             // Rezervasyon aralığını dakika cinsine dönüştürüyoruz
+                             var rezervasyonAraligiDakika = toplamDakika(rezervasyonAraligi);
+
+                             // Aralığı hesaplıyoruz
+                             var aralik = (kapanisDakika - acilisDakika) / rezervasyonAraligiDakika;
+
+                             function toplamDakika(zaman) {
+                                 var zamanParcalari = zaman.split(":");
+                                 var saat = parseInt(zamanParcalari[0]);
+                                 var dakika = parseInt(zamanParcalari[1]);
+                                 return saat * 60 + dakika;
+                             }
+                             var element = document.querySelector('[aria-labelledby="fc-dom-1"]');
+
+                             // Yüksekliği ayarlıyoruz
+                             var height = aralik * 100; // Aralık sayısını yükseklik olarak çarpıyoruz
+                             element.style.height = height + 'px !important'; // Yüksekliği ayarlıyoruz
+
+                             console.log(aralik);
 
                              calendarEl = document.getElementById('calendar' + clickedId);
 
@@ -260,115 +287,117 @@
                                  },
                                  dateClick: function(info) {
 
-                                    const tarih = new Date(info.dateStr);
+                                     const tarih = new Date(info.dateStr);
 
-if (tarih.getTime() < Date.now()) {
- Swal.fire({
-   background: 'white',
-        title: "<h3 style='color:black'>Geçmiş Zaman'a Ekleme Yapılmaz</h3>",
-
- })
-}else{
-
-                                     Swal.fire({
+                                     if (tarih.getTime() < Date.now()) {
+                                         Swal.fire({
                                              background: 'white',
-                                             title: "<h3 style='color:black'>Bu saat aralığına eklemek istediğinize emin misiniz?</h3>",
-                                             showDenyButton: true,
-                                             input: "select",
-                                             inputOptions: {
-                                                 0: "Abone Değil",
-                                                 4: "1 Ay",
-                                                 12: "3 Ay",
-                                                 24: "6 Ay",
-                                                 48: "12 Ay",
-                                                 96: "24 Ay",
-                                                 144: "36 Ay"
+                                             title: "<h3 style='color:black'>Geçmiş Zaman'a Ekleme Yapılmaz</h3>",
+
+                                         })
+                                     } else {
+
+                                         Swal.fire({
+                                                 background: 'white',
+                                                 title: "<h3 style='color:black'>Bu saat aralığına eklemek istediğinize emin misiniz?</h3>",
+                                                 showDenyButton: true,
+                                                 input: "select",
+                                                 inputOptions: {
+                                                     0: "Abone Değil",
+                                                     4: "1 Ay",
+                                                     12: "3 Ay",
+                                                     24: "6 Ay",
+                                                     48: "12 Ay",
+                                                     96: "24 Ay",
+                                                     144: "36 Ay"
 
 
-                                             },
+                                                 },
 
 
-                                             html: `
+                                                 html: `
                                                  <div class="row">
                                             <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
                                             <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)">
                                                    </div>
                                                     <input type="text" name="note" class="swal2-input" placeholder="Not">
                                                                     `,
-                                             showCancelButton: false,
-                                             confirmButtonText: "Ekle",
-                                             denyButtonText: `Vazgeç`
-                                         })
-                                         .then((result) => {
+                                                 showCancelButton: false,
+                                                 confirmButtonText: "Ekle",
+                                                 denyButtonText: `Vazgeç`
+                                             })
+                                             .then((result) => {
 
-                                             if (result.isConfirmed) {
-                                                 const abonelikSuresi = result.value;
-
-
-                                                 const userName = $("input[name='userName']")
-                                                     .val();
-                                                 const userinfo = $("input[name='userinfo']")
-                                                     .val();
-                                                 const note = $("input[name='note']").val();
-                                                 const aboneTime = $("input[name='aboneTime']")
-                                                     .val();
+                                                 if (result.isConfirmed) {
+                                                     const abonelikSuresi = result.value;
 
 
-                                                 const dateStr = info.dateStr;
+                                                     const userName = $("input[name='userName']")
+                                                         .val();
+                                                     const userinfo = $("input[name='userinfo']")
+                                                         .val();
+                                                     const note = $("input[name='note']").val();
+                                                     const aboneTime = $(
+                                                             "input[name='aboneTime']")
+                                                         .val();
 
 
-                                                 $.ajax({
-                                                     type: "POST",
-                                                     url: "{{ route('calender.add') }}",
-                                                     data: {
-                                                         title: abonelikSuresi,
-                                                         sahaId: sahaid,
-                                                         date: dateStr,
-                                                         userName: userName,
-                                                         userinfo: userinfo,
-                                                         note: note,
-                                                         aboneTime: abonelikSuresi,
-                                                         _token: '{{ csrf_token() }}'
-                                                     },
-                                                     success: function(response) {
-                                                         // Başarılı cevap
-                                                         calendar.addEvent({
-                                                             title: 'Dolu',
-                                                             start: dateStr,
-                                                             color: 'blue',
-                                                         });
-                                                         setInterval(() => window
-                                                             .location.reload(
-                                                                 false),
-                                                             1000);
+                                                     const dateStr = info.dateStr;
 
-                                                         Swal.fire({
-                                                             background: 'white',
 
-                                                             position: "top-end",
-                                                             icon: "success",
-                                                             title: "Eklendi",
-                                                             showConfirmButton: false,
-                                                             timer: 1500
-                                                         });
-                                                     },
-                                                     error: function(error) {
-                                                         // Hata durumu
-                                                         console.error(error);
-                                                         Swal.fire({
-                                                             background: 'white',
+                                                     $.ajax({
+                                                         type: "POST",
+                                                         url: "{{ route('calender.add') }}",
+                                                         data: {
+                                                             title: abonelikSuresi,
+                                                             sahaId: sahaid,
+                                                             date: dateStr,
+                                                             userName: userName,
+                                                             userinfo: userinfo,
+                                                             note: note,
+                                                             aboneTime: abonelikSuresi,
+                                                             _token: '{{ csrf_token() }}'
+                                                         },
+                                                         success: function(response) {
+                                                             // Başarılı cevap
+                                                             calendar.addEvent({
+                                                                 title: 'Dolu',
+                                                                 start: dateStr,
+                                                                 color: 'blue',
+                                                             });
+                                                             setInterval(() => window
+                                                                 .location
+                                                                 .reload(
+                                                                     false),
+                                                                 1000);
 
-                                                             icon: 'error',
-                                                             title: 'Hata',
-                                                             text: error
-                                                         });
-                                                     }
-                                                 });
-                                             } else if (result.isDenied) {
+                                                             Swal.fire({
+                                                                 background: 'white',
 
-                                             }
-                                         });
-                                        }
+                                                                 position: "top-end",
+                                                                 icon: "success",
+                                                                 title: "Eklendi",
+                                                                 showConfirmButton: false,
+                                                                 timer: 1500
+                                                             });
+                                                         },
+                                                         error: function(error) {
+                                                             // Hata durumu
+                                                             console.error(error);
+                                                             Swal.fire({
+                                                                 background: 'white',
+
+                                                                 icon: 'error',
+                                                                 title: 'Hata',
+                                                                 text: error
+                                                             });
+                                                         }
+                                                     });
+                                                 } else if (result.isDenied) {
+
+                                                 }
+                                             });
+                                     }
 
                                  },
                                  visibleRange: {
@@ -430,9 +459,14 @@ if (tarih.getTime() < Date.now()) {
 
 
          }
-         .fc, .fc *, .fc ::after, .fc ::before{
-            color: white;
+
+         .fc,
+         .fc *,
+         .fc ::after,
+         .fc ::before {
+             color: white;
          }
+
          .fc .fc-timegrid .fc-daygrid-body {
              display: none !important;
          }
@@ -628,112 +662,112 @@ if (tarih.getTime() < Date.now()) {
 
                              },
                              dateClick: function(info) {
-                                const tarih = new Date(info.dateStr);
+                                 const tarih = new Date(info.dateStr);
 
-if (tarih.getTime() < Date.now()) {
- Swal.fire({
-   background: 'white',
-        title: "<h3 style='color:black'>Geçmiş Zaman'a Ekleme Yapılmaz</h3>",
+                                 if (tarih.getTime() < Date.now()) {
+                                     Swal.fire({
+                                         background: 'white',
+                                         title: "<h3 style='color:black'>Geçmiş Zaman'a Ekleme Yapılmaz</h3>",
 
- })
-}else{
-    Swal.fire({
-                                     background: 'white',
-                                     title: "<h3 style='color:black'> " +
-                                         "Bu saat aralığına eklemek istediğinize emin misiniz?" +
-                                         "</h3>",
-                                     input: "select",
-                                     inputOptions: {
-                                         0: "Abone Değil",
-                                         4: "1 Ay",
-                                         12: "3 Ay",
-                                         24: "6 Ay",
-                                         48: "12 Ay",
-                                         96: "24 Ay",
-                                         144: "36 Ay"
-
-
-                                     },
+                                     })
+                                 } else {
+                                     Swal.fire({
+                                         background: 'white',
+                                         title: "<h3 style='color:black'> " +
+                                             "Bu saat aralığına eklemek istediğinize emin misiniz?" +
+                                             "</h3>",
+                                         input: "select",
+                                         inputOptions: {
+                                             0: "Abone Değil",
+                                             4: "1 Ay",
+                                             12: "3 Ay",
+                                             24: "6 Ay",
+                                             48: "12 Ay",
+                                             96: "24 Ay",
+                                             144: "36 Ay"
 
 
-
-                                     showDenyButton: true,
-                                     html: `
-                           <div class="row">
-                               <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
-                               <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)"</div>
-                           <input type="text" name="note" class="swal2-input" placeholder="Not">
-  
-                        `,
-                                     showCancelButton: false,
-                                     confirmButtonText: "Ekle",
-                                     denyButtonText: `Vazgeç`
-                                 }).then((result) => {
-                                     if (result.isConfirmed) {
-                                         const abonelikSuresi = result.value;
-
-                                         const userName = $("input[name='userName']")
-                                             .val();
-                                         const userinfo = $("input[name='userinfo']")
-                                             .val();
-                                         const note = $("input[name='note']").val();
-
-                                         const dateStr = info.dateStr;
+                                         },
 
 
-                                         $.ajax({
-                                             type: "POST",
-                                             url: "{{ route('calender.add') }}",
-                                             data: {
-                                                 title: abonelikSuresi,
-                                                 sahaId: sahaid,
-                                                 date: dateStr,
-                                                 userName: userName,
-                                                 userinfo: userinfo,
-                                                 note: note,
-                                                 aboneTime: abonelikSuresi,
-                                                 _token: '{{ csrf_token() }}'
-                                             },
-                                             success: function(response) {
-                                                 // Başarılı cevap
-                                                 calendar.addEvent({
-                                                     title: 'Dolu',
-                                                     start: dateStr,
-                                                     color: 'blue',
-                                                 });
-                                                 setInterval(() => window
-                                                     .location.reload(
-                                                         false),
-                                                     1000);
 
-                                                 Swal.fire({
-                                                     background: 'white',
+                                         showDenyButton: true,
+                                         html: `
+                                                       <div class="row">
+                                                           <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
+                                                           <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)"</div>
+                                                       <input type="text" name="note" class="swal2-input" placeholder="Not">
+                                                    
+                                                    `,
+                                         showCancelButton: false,
+                                         confirmButtonText: "Ekle",
+                                         denyButtonText: `Vazgeç`
+                                     }).then((result) => {
+                                         if (result.isConfirmed) {
+                                             const abonelikSuresi = result.value;
 
-                                                     position: "top-end",
-                                                     icon: "success",
-                                                     title: "Eklendi",
-                                                     showConfirmButton: false,
-                                                     timer: 1500
-                                                 });
-                                             },
-                                             error: function(error) {
-                                                 // Hata durumu
-                                                 console.error(error);
-                                                 Swal.fire({
-                                                     background: 'white',
+                                             const userName = $("input[name='userName']")
+                                                 .val();
+                                             const userinfo = $("input[name='userinfo']")
+                                                 .val();
+                                             const note = $("input[name='note']").val();
 
-                                                     icon: 'error',
-                                                     title: 'Hata',
-                                                     text: error
-                                                 });
-                                             }
-                                         });
-                                     } else if (result.isDenied) {
-                                         // Vazgeçildiğinde yapılacak işlem
-                                     }
-                                 });
-}
-                              
+                                             const dateStr = info.dateStr;
+
+
+                                             $.ajax({
+                                                 type: "POST",
+                                                 url: "{{ route('calender.add') }}",
+                                                 data: {
+                                                     title: abonelikSuresi,
+                                                     sahaId: sahaid,
+                                                     date: dateStr,
+                                                     userName: userName,
+                                                     userinfo: userinfo,
+                                                     note: note,
+                                                     aboneTime: abonelikSuresi,
+                                                     _token: '{{ csrf_token() }}'
+                                                 },
+                                                 success: function(response) {
+                                                     // Başarılı cevap
+                                                     calendar.addEvent({
+                                                         title: 'Dolu',
+                                                         start: dateStr,
+                                                         color: 'blue',
+                                                     });
+                                                     setInterval(() => window
+                                                         .location.reload(
+                                                             false),
+                                                         1000);
+
+                                                     Swal.fire({
+                                                         background: 'white',
+
+                                                         position: "top-end",
+                                                         icon: "success",
+                                                         title: "Eklendi",
+                                                         showConfirmButton: false,
+                                                         timer: 1500
+                                                     });
+                                                 },
+                                                 error: function(error) {
+                                                     // Hata durumu
+                                                     console.error(error);
+                                                     Swal.fire({
+                                                         background: 'white',
+
+                                                         icon: 'error',
+                                                         title: 'Hata',
+                                                         text: error
+                                                     });
+                                                 }
+                                             });
+                                         } else if (result.isDenied) {
+                                             // Vazgeçildiğinde yapılacak işlem
+                                         }
+                                     });
+                                 }
+
 
 
                              },
@@ -772,12 +806,12 @@ if (tarih.getTime() < Date.now()) {
 
 
 
-     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="height: 50%">
+     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="height: 30%">
          <div class="p-3 text-gray-900 dark:text-gray-100 backgrounds">
 
 
 
-             <h3 style="color: #0d6126">
+             <h3 style="color: #356000">
                  Sahalarım
              </h3>
              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

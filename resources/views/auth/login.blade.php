@@ -1,4 +1,18 @@
 <x-guest-layout>
+    <div class="flex flex-shrink-0 items-center">
+
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <div class="d-flex align-items-center" id="hovereffect">
+                    <img src="{{asset('logo.png')}}" width="40px" class="mr-2">
+                    <div class="logonameyesil ">YEŞİL</div>
+                    <div class="logonamesaha">SAHA</div>
+                </div>
+            </h2>
+        </div>
+        
+
+    </div>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -41,13 +55,35 @@
                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
                    Şifrenizi mi unuttunuz
                 </a>
-            @endif
-
-       
- 
+            @endif 
             <x-primary-button class="ml-3">
         Giriş yapılacak
             </x-primary-button>
         </div>
     </form>
+    <div class="flex flex-shrink-0 items-center">
+
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <div class="d-flex align-items-center" id="hovereffect">
+                    <a onclick="yakinda()">
+                    <img src="{{asset('appstore.png')}}" width="160px" class="mr-2">
+                 </a>
+                 <a onclick="yakinda()">
+                    <img src="{{asset('googleplay.png')}}" width="160px" class="mr-2">
+
+                 </a>
+                </div>
+            </h2>
+        </div>
+        
+
+    </div>
+ 
+
 </x-guest-layout>
+<script>
+    function yakinda(){
+        alert("Çok Yakında");
+    }
+</script>

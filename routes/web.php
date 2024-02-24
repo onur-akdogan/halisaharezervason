@@ -34,7 +34,7 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/calenderindex/{id}', [CalenderController::class, 'index'])->name('calender.index');
-    Route::get('/apicalender/{id}', [CalenderController::class, 'apicalender'])->name('calender.apicalender');
+    Route::get('/apicalender/{id}/{addweek}', [CalenderController::class, 'apicalender'])->name('calender.apicalender');
 
     Route::post('/calender/add', [CalenderController::class, 'add'])->name('calender.add');
     Route::post('/calender/update', [CalenderController::class, 'update'])->name('calender.update');

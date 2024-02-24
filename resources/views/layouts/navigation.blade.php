@@ -1,5 +1,38 @@
+
 <nav x-data="{ open: false }" class="bg-light border-b border-gray-100">
     <!-- Primary Navigation Menu -->
+    <style>
+        .logonameyesil {
+           font-weight: bold;
+           color: #55B230 !important;
+            
+        }
+    
+        .logonamesaha {
+            font-weight: bold;
+
+            color: #55B230 !important;
+        }
+        #hovereffect{
+         width: 200px;
+         font-size: 20px;
+
+     }
+        #hovereffect:hover{
+         
+            font-size: 30px;
+
+        }
+        .logonameyesil:hover{
+            font-weight: bold;
+           color: #55B230 !important;
+       }
+       .logonamesaha:hover{
+        font-weight: bold;
+
+        color: #55B230 !important;
+       }
+    </style>
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -9,10 +42,14 @@
 
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                            <a class="text-decoration-none" href="{{ route('home') }}" style="color: #0d6126">
-                                {{ config('app.name', 'Laravel') }}</a>
+                            <div class="d-flex align-items-center" id="hovereffect">
+                                <img src="{{asset('logo.png')}}" width="40px" class="mr-2">
+                                <div class="logonameyesil ">YEŞİL</div>
+                                <div class="logonamesaha">SAHA</div>
+                            </div>
                         </h2>
                     </div>
+                    
 
                 </div>
                 <!-- Navigation Links -->
@@ -137,47 +174,45 @@
 
                             Saha Ekle
                             </x-nav-link>
- 
-@if (Auth::user()->type == 2)
- 
 
-                            <x-responsive-nav-link :href="route('admin.users')">
+                            @if (Auth::user()->type == 2)
+                                <x-responsive-nav-link :href="route('admin.users')">
 
-                                Kullanıcılar
+                                    Kullanıcılar
+                                    </x-nav-link>
+                            @endif
+
+
+                            <x-responsive-nav-link :href="route('user.musteriler')">
+
+                                Müşteriler
                                 </x-nav-link>
-                                @endif
 
 
-                                <x-responsive-nav-link :href="route('user.musteriler')">
+                                <x-responsive-nav-link :href="route('user.musterileriptal')">
 
-                                    Müşteriler
+                                    İptal Edilenler
                                     </x-nav-link>
 
 
-                                    <x-responsive-nav-link :href="route('user.musterileriptal')">
+                                    <x-responsive-nav-link :href="route('user.aboneler')">
 
-                                        İptal Edilenler
+                                        Aboneler
                                         </x-nav-link>
 
 
-                                        <x-responsive-nav-link :href="route('user.aboneler')">
-
-                                            Aboneler
-                                            </x-nav-link>     
 
 
+                                        <!-- Authentication -->
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
 
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-responsive-nav-link :href="route('logout')"
-                                    onclick="event.preventDefault();
+                                            <x-responsive-nav-link :href="route('logout')"
+                                                onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                                    Çıkış Yap
-                                </x-responsive-nav-link>
-                            </form>
+                                                Çıkış Yap
+                                            </x-responsive-nav-link>
+                                        </form>
                 </div>
             @else
                 <div class="space-y-1">

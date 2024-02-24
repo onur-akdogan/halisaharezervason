@@ -65,23 +65,7 @@
 
                                 </div>
                             </div>
-                            <div class="form-group row pt-2 bb-5">
-                                <div class="row d-flex justify-content-center mt-100">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Kapalı Günler</label>
-
-                                    <div class="col-sm-10">
-                                        <select id="choices-multiple-remove-button" placeholder="Kapalı Olan Günler"
-                                            multiple name="offday[]">
-                                            @foreach ($days as $day)
-                                                <option value="{{ $day['id'] }}"
-                                                    @if (in_array($day['id'], $selectedDays)) selected @endif>
-                                                    {{ $day['name'] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="hidden"  multiple name="offday[]">
                             <div class="col-lg-12" style="height: 200px"></div>
                             <div class="form-group row pt-5">
                                 <div class="col-sm-11">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Netgsm\Sms\SmsSend;
 
 use Illuminate\Http\Request;
 
@@ -10,27 +11,22 @@ class CalenderController extends Controller
 {
   public function sms()
   {
-    $curl = curl_init();
+    
+  $data=array(
+    'message'=>'test mesajı',
+    'no'=>['5051313404'],
+    'header'=>'SEDAT AKSU',
+    'filter'=>0,
+    'encoding'=>'tr',
+    'startdate'=>'170220231000',
+    'stopdate'=>'170220231200'
+);
+$sms= new SmsSend;
+$cevap=$sms->smsGonder($data);
+dd($cevap);
+die;
 
-    curl_setopt_array(
-      $curl,
-      array(
-        CURLOPT_URL => 'https://api.netgsm.com.tr/sms/send/get',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('usercode' => '8503085771', 'password' => 'Sedat73328.', 'gsmno' => '5051313404', 'message' => 'testmesajı', 'msgheader' => 'SEDAT AKSU', 'filter' => '0', 'startdate' => '250220241215', 'stopdate' => '230520241830'),
-      )
-    );
-
-    $response = curl_exec($curl);
-
-    curl_close($curl);
-    echo $response;
+ 
   }
   public function index($id)
   {

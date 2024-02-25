@@ -13,7 +13,7 @@ class CalenderController extends Controller
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://soap.netgsm.com.tr:8080/Sms_webservis/SMS?wsdl/',
+        CURLOPT_URL => 'https://api.netgsm.com.tr/sms/send/get',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

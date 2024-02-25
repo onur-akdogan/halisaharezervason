@@ -23,7 +23,7 @@ class CalenderController extends Controller
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('usercode' => '8503085771', 'password' => 'X4.M4R3r', 'gsmno' => '5545693062', 'message' => 'testmesajı', 'msgheader' => 'SEDAT AKSU', 'filter' => '0', 'startdate' => '230520221650', 'stopdate' => '230520221830'),
+        CURLOPT_POSTFIELDS => array('usercode' => '8503085771', 'password' => 'X4.M4R3r', 'gsmno' => '5051313404', 'message' => 'testmesajı', 'msgheader' => 'SEDAT AKSU', 'filter' => '0', 'startdate' => '230520221650', 'stopdate' => '230520221830'),
       )
     );
 

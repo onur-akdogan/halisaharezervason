@@ -12,7 +12,9 @@ class CalenderController extends Controller
   {
     $curl = curl_init();
 
-    curl_setopt_array($curl, array(
+    curl_setopt_array(
+      $curl,
+      array(
         CURLOPT_URL => 'https://api.netgsm.com.tr/sms/send/get',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
@@ -21,67 +23,14 @@ class CalenderController extends Controller
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => '<?xml version="1.0"?>
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <SOAP-ENV:Body>
-                <ns3:smsGonderNNV2 xmlns:ns3="http://sms/">
-                    <username>8503085771</username>
-                    <password>Sedat73328.</password>
-                    <header>mesajbaşlığı</header>
-                    <msg>mesaj1</msg>
-                    <gsm>5051313404</gsm>
-                    <msg>mesaj2</msg>
-                    <gsm>5051313404</gsm>
-                    <filter>0</filter>
-                    <encoding>TR</encoding>
-                    <appkey>xxx</appkey>
-                </ns3:smsGonderNNV2>
-            </SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>',
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: text/xml'
-        ),
-    ));
-    
+        CURLOPT_POSTFIELDS => array('usercode' => '8503085771', 'password' => 'Sedat73328.', 'gsmno' => '5051313404', 'message' => 'testmesajı', 'msgheader' => 'SEDAT AKSU', 'filter' => '0', 'startdate' => '250220241215', 'stopdate' => '230520241830'),
+      )
+    );
+
     $response = curl_exec($curl);
-    
+
     curl_close($curl);
     echo $response;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
   public function index($id)
   {

@@ -25,6 +25,10 @@
                 transform: rotate(360deg);
             }
         }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+            color: #fff;
+    background-color: #198754;
+        }
 
         table {
             width: 100%;

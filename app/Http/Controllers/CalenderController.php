@@ -11,22 +11,52 @@ class CalenderController extends Controller
 {
   public function sms()
   {
-    
-  $data=array(
-    'message'=>'test mesajı',
-    'no'=>['5051313404'],
-    'header'=>'SEDAT AKSU',
-    'filter'=>0,
-    'encoding'=>'tr',
-    'startdate'=>'170220231000',
-    'stopdate'=>'170220231200'
-);
-$sms= new SmsSend;
-$cevap=$sms->smsGonder($data);
-dd($cevap);
-die;
-
  
+    $nowTime = \Carbon\Carbon::now();
+    $thirtyMinutesLater = $nowTime->copy()->addMinutes(30);
+
+    $events = \DB::table("events")
+      ->where("deleted", 0)
+      ->get();
+    $msGsm = array();
+
+    foreach ($events as $event) {
+       $halisaha = \DB::table("halisaha")->where("id", $event->sahaId)->first();
+      $msGsm[] = array('gsm' => $event->userinfo, 'message' => "Sayın " . $event->userName . '' . $halisaha->name . " Maçınız Saat " . '' . $event->date . " Başlayacaktır.");
+    }
+
+
+
+
+    $data = array('startdate' => '260220241300', 'stopdate' => '260220241300', 'header' => 'SEDAT AKSU', 'filter' => 0);
+    $sms = new SmsSend;
+    $cevap = $sms->smsGonderNN($msGsm, $data);
+    dd($cevap);
+    die;
+
+
+
+
+
+
+
+
+    //date=2024-02-25 10:00:00
+//  $data=array(
+//    'message'=>'Rezervasyon Saatiniz Gelmiştir Lütfen zamanında sahaya geliniz.',
+//    'no'=>['5051313404'],
+//    'header'=>'SEDAT AKSU',
+//    'filter'=>0,
+//    'encoding'=>'tr',
+//    'startdate'=>'170220231001',
+//    'stopdate'=>'170220231202'
+//);
+//$sms= new SmsSend;
+//$cevap=$sms->smsGonder($data);
+//dd($cevap);
+//die;
+
+
   }
   public function index($id)
   {

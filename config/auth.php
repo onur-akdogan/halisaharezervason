@@ -14,7 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+         'guard' => 'web',
+
         'passwords' => 'users',
     ],
 
@@ -38,6 +39,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [ // 'api' koruma stratejisi tanımlaması eklendi
+            'driver' => 'token',
             'provider' => 'users',
         ],
     ],
@@ -64,11 +70,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

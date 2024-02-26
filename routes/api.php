@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+ use App\Http\Controllers\Api\UserApiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
+ 
+    Route::get('/userGet', [UserApiController::class, 'userGet']);
+    Route::get('/halisahagetAll', [UserApiController::class, 'halisahagetAll']);
+    Route::get('/halisahadetail/{id}', [UserApiController::class, 'halisahadetail']);
+    Route::post('/halisahaedit', [UserApiController::class, 'halisahaedit']);
+    Route::get('/halisahadelete/{id}', [UserApiController::class, 'halisahadelete']);
+    Route::get('/musteriget', [UserApiController::class, 'musteriget']);
+    Route::get('/abones', [UserApiController::class, 'abones']);
+
+    
 });
+
+
+ Route::post('/login', [UserApiController::class, 'login']);
+ Route::post('/register', [UserApiController::class, 'register']);

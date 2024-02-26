@@ -32,11 +32,7 @@ class UserController extends Controller
             ->get();
 
         foreach ($halisahalar as $item) {
-            /*  $events = \DB::table("events")
-              ->select('userinfo', 'note', 'date')  // Remove 'userName' here
-              ->where("sahaId", $item->id)
-              ->groupBy('userinfo')
-              ->get(); */
+      
             $events = \DB::table("events")
                 ->select('userinfo')
                 ->where("sahaId", $item->id)

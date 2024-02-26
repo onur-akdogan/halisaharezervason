@@ -26,19 +26,9 @@ class HalisahaController extends Controller
 
          $appointments = json_decode($events, true);
 
-         $jsonData = '[
-      {"id":0, "name":"Pazar"},
-      {"id":1, "name":"Pazartesi"},
-      {"id":2, "name":"Salı"},
-      {"id":3, "name":"Çarşamba"},
-      {"id":4, "name":"Perşembe"},
-      {"id":5, "name":"Cuma"},
-      {"id":6, "name":"Cumartesi"}
-  ]';
 
 
-         // JSON verisini diziye dönüştürme
-         $days = json_decode($jsonData, true);
+
 
 
 
@@ -145,17 +135,17 @@ class HalisahaController extends Controller
 ]';
 
 
-$halisahadata = \DB::table("halisaha")->where("id", $id)->first();
-$halisahakapanis = $halisahadata->endhour;
-$firstTwoCharacters = substr($halisahakapanis, 0, 2);
-$fark=$firstTwoCharacters-24;
-if ($halisahakapanis >= 24) {
-    // İlk iki rakamı değiştirmek için örnek bir kod
-    $newFirstTwoCharacters = "0".$fark; // Örnek olarak 08 olarak değiştirildi
-    $newEndhour = $newFirstTwoCharacters . substr($halisahakapanis, 2);
-    $halisahadata->endhour = $newEndhour;
-}
-       // JSON verisini PHP dizisine çevirin
+      $halisahadata = \DB::table("halisaha")->where("id", $id)->first();
+      $halisahakapanis = $halisahadata->endhour;
+      $firstTwoCharacters = substr($halisahakapanis, 0, 2);
+      $fark = $firstTwoCharacters - 24;
+      if ($halisahakapanis >= 24) {
+         // İlk iki rakamı değiştirmek için örnek bir kod
+         $newFirstTwoCharacters = "0" . $fark; // Örnek olarak 08 olarak değiştirildi
+         $newEndhour = $newFirstTwoCharacters . substr($halisahakapanis, 2);
+         $halisahadata->endhour = $newEndhour;
+      }
+      // JSON verisini PHP dizisine çevirin
       $days = json_decode($jsonData, true);
       $selectedDays = json_decode($halisahadata->offdays, true);
       $macsuresi = str_replace(":00", "", $halisahadata->macsuresi);
@@ -196,7 +186,7 @@ if ($halisahakapanis >= 24) {
    }
    public function update(Request $request)
    {
- 
+
       $newoffdays = [];
       if ($request->offday != null) {
          foreach ($request->offday as $offday) {
@@ -215,7 +205,7 @@ if ($halisahakapanis >= 24) {
 
          $firstTwoCharacters = 24 + intval($request->endhour);
          $firstTwoCharacters = $firstTwoCharacters . ":" . $lastTwoCharacters . ":00";
-      }else{
+      } else {
          $firstTwoCharacters = $firstTwoCharacters . ":" . $lastTwoCharacters . ":00";
 
       }
@@ -240,7 +230,7 @@ if ($halisahakapanis >= 24) {
          "offdays" => $resultString,
       ]);
       return redirect()->route("halisaha.index")->with('success', 'Güncelleme İşlemi Başarılı');
-      ;
+     
 
    }
 

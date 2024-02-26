@@ -28,8 +28,7 @@ class CalenderController extends Controller
       $eventDateTime = Carbon::parse($event->date);
       $now = Carbon::now();
       $diffInMinutes = $now->diffInMinutes($eventDateTime);
-      dd("DateTimeNow: ".$now ."kaç dk kaldı: ".$diffInMinutes);
-
+ 
       // Eğer etkinlik tarihine 30 dakika veya daha az kaldıysa SMS gönder
       if ($now->diffInMinutes($eventDateTime) <= 30) {
         $sms = new SmsSend;

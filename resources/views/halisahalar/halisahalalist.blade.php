@@ -318,7 +318,7 @@
                                                  html: `
                                                  <div class="row">
                                             <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
-                                            <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)">
+                                            <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon Numarasını Başında 0 Olmadan Yazın)">
                                                    </div>
                                                     <input type="text" name="note" class="swal2-input" placeholder="Not">
                                                                     `,
@@ -575,7 +575,7 @@
                                                  info.event
                                                  .extendedProps.userName + `>
                                <input type="text" name="userinfo" class="swal2-input"  value= ` + info.event
-                                                 .extendedProps.userinfo + ` placeholder="İrtibat Bilgileri (Telefon no)"</div>
+                                                 .extendedProps.userinfo + ` placeholder="İrtibat Bilgileri (Telefon Numarasını Başında 0 Olmadan Yazın)"</div>
                            <input type="text" name="note" class="swal2-input" placeholder="Not"  value=` + info.event
                                                  .extendedProps.note + `>
                                `,
@@ -695,7 +695,7 @@
                                          html: `
                                                        <div class="row">
                                                            <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
-                                                           <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)"</div>
+                                                           <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon Numarasını Başında 0 Olmadan Yazın)"</div>
                                                        <input type="text" name="note" class="swal2-input" placeholder="Not">
                                                     
                                                     `,

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string("note")->nullable();
             
             $table->integer("deleted")->default(0);
+            $table->integer("smsstatus")->default(0);
             
             $table->timestamps();
         });

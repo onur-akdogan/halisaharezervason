@@ -16,6 +16,25 @@
             /* Başlangıçta gizli olacak */
         }
 
+        .swal2-input,
+        .swal2-file,
+        .swal2-textarea {
+            background-color: #ccc;
+            color: rgb(0, 0, 0);
+
+        }
+
+        .swal2-input::placeholder {
+            color: rgb(0, 0, 0);
+            opacity: 1;
+            /* Firefox */
+        }
+
+        .swal2-input::-ms-input-placeholder {
+            /* Edge 12 -18 */
+            color: rgb(0, 0, 0);
+        }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -25,9 +44,11 @@
                 transform: rotate(360deg);
             }
         }
-        .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+
+        .nav-pills .nav-link.active,
+        .nav-pills .show>.nav-link {
             color: #fff;
-    background-color: #198754;
+            background-color: #198754;
         }
 
         table {
@@ -141,6 +162,11 @@
             margin-bottom: 10px;
         }
 
+        label {
+            color: red;
+            font-size: 12px;
+        }
+
         #prev {
             width: 85px;
             height: 40px;
@@ -160,17 +186,17 @@
             background-color: #f2f2f2;
         }
     </style>
-<script>
-    function showDataBs(element) {
-    element.innerText = element.getAttribute('data-bs'); // data-bs içeriğini göster
-}
-
-function hideDataBs(element) {
-    element.innerText = element.getAttribute('data-original-content'); // Özgün içeriği geri yükle
-}
-</script>
     <script>
-        sahaninidsi=0;
+        function showDataBs(element) {
+            element.innerText = element.getAttribute('data-bs'); // data-bs içeriğini göster
+        }
+
+        function hideDataBs(element) {
+            element.innerText = element.getAttribute('data-original-content'); // Özgün içeriği geri yükle
+        }
+    </script>
+    <script>
+        sahaninidsi = 0;
         try {
             document.addEventListener('DOMContentLoaded', function() {
                 const dataContainer = document.getElementById('pills-tabContent');
@@ -180,7 +206,7 @@ function hideDataBs(element) {
 
                 function fetchData(clickedId, weeks) {
                     weeks;
-                    sahaninidsi=clickedId;
+                    sahaninidsi = clickedId;
                     loader.style.display = 'block'; // Yükleme göstergesini göster
 
                     fetch('/apicalender/' + clickedId + '/' + weeks, {
@@ -321,12 +347,12 @@ function hideDataBs(element) {
 
                 function handleClick(event) {
                     week = 0;
-                    
+
                     const clickedButton = event.target;
                     const clickedId = clickedButton.id.split("-")[1];
                     fetchData(clickedId, week);
                 }
-           
+
 
 
                 // İlk taba tıklanınca çağrılsın
@@ -340,30 +366,30 @@ function hideDataBs(element) {
                 var nextbutton = document.getElementById("next");
                 if (nextbutton) {
                     nextbutton.addEventListener("click", handleClicknext);
-                } 
+                }
 
-              
+
                 function handleClicknext(event) {
                     var getgetweekval = document.getElementById("getweekval").value;
-                 
+
 
                     week = parseInt(getgetweekval) + 1;
-                   
+
                     fetchData(sahaninidsi, week);
                 }
 
                 var prewbutton = document.getElementById("prev");
                 if (prewbutton) {
-                     prewbutton.addEventListener("click", handleClickonceki);
-                } 
+                    prewbutton.addEventListener("click", handleClickonceki);
+                }
 
-              
+
                 function handleClickonceki(event) {
                     var getgetweekval = document.getElementById("getweekval").value;
-                 
+
 
                     week = parseInt(getgetweekval) - 1;
-                 
+
                     fetchData(sahaninidsi, week);
                 }
 
@@ -404,7 +430,7 @@ function hideDataBs(element) {
                             <input type="hidden" value="${data.addweek}" id='addweek'>
                             <button id="prev" class="btn btn-dark"> Önceki </button>
 
-                                    <button id="next" class="btn btn-success ml-5"> Sonraki </button>
+                            <button id="next" class="btn btn-success ml-5"> Sonraki </button>
                         </div>
                     </div>
                 </div>
@@ -512,9 +538,13 @@ function hideDataBs(element) {
                         showDenyButton: true,
                         html: `
                            <div class="row">
+                           
+                                <label>Ulaşılacak Kişinin İsmi</label>
+
                                <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi" value=` +
                             userName + `>
-                               <input type="text" name="userinfo" class="swal2-input"  value= ` + contact + ` placeholder="İrtibat Bilgileri (Telefon no)"</div>
+                            <label>Telefon Numarasını Başında "0" Olmadan Yazın</label>
+                               <input type="text" name="userinfo" class="swal2-input"  value= ` + contact + ` placeholder="İrtibat Numarası"</div>
                            <input type="text" name="note" class="swal2-input" placeholder="Not"  value=` + userinfo + `>
                                `,
                         showCancelButton: false,
@@ -638,8 +668,10 @@ function hideDataBs(element) {
                     showDenyButton: true,
                     html: `
                             <div class="row">
+                                <label>Ulaşılacak Kişinin İsmi</label>
                                 <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
-                                <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Bilgileri (Telefon no)">
+                                <label>Telefon Numarasını Başında "0" Olmadan Yazın</label>
+                                <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Numarası">
                             </div>
                             <input type="text" name="note" class="swal2-input" placeholder="Not">
                         `,

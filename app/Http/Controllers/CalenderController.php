@@ -11,30 +11,50 @@ class CalenderController extends Controller
 {
   public function sms()
   {
- 
-    $nowTime = \Carbon\Carbon::now();
+
+    $nowTime = Carbon::now();
     $thirtyMinutesLater = $nowTime->copy()->addMinutes(30);
 
     $events = \DB::table("events")
+      ->where("smsstatus", 0)
+
       ->where("deleted", 0)
       ->get();
     $msGsm = array();
 
     foreach ($events as $event) {
-       $halisaha = \DB::table("halisaha")->where("id", $event->sahaId)->first();
-      $msGsm[] = array('gsm' => $event->userinfo, 'message' => "Sayın " . $event->userName . '' . $halisaha->name . " Maçınız Saat " . '' . $event->date . " Başlayacaktır.");
+      $halisaha = \DB::table("halisaha")->where("id", $event->sahaId)->first();
+      $user = \DB::table("users")->where("id", $halisaha->userId)->first();
+
+      $eventDateTime = Carbon::parse($event->date);
+      $now = Carbon::now();
+      $diffInMinutes = $now->diffInMinutes($eventDateTime);
+      dd("DateTimeNow: ".$now ."kaç dk kaldı: ".$diffInMinutes);
+
+      // Eğer etkinlik tarihine 30 dakika veya daha az kaldıysa SMS gönder
+      if ($now->diffInMinutes($eventDateTime) <= 30) {
+        $sms = new SmsSend;
+        $data = array(
+          'msgheader' => "SEDAT AKSU",
+          'gsm' => $event->userinfo,
+          'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz.",
+          'filter' => '0',
+          'startdate' => '270120230950',
+          'stopdate' => '270120231030',
+        );
+
+        $sonuc = $sms->smsgonder1_1($data);
+        $events = \DB::table("events")
+          ->where("id", $event->id)
+          ->update([
+            "smsstatus" => 1,
+          ]);
+      }
     }
 
 
 
 
-    $data = array('startdate' => '260220241300', 'stopdate' => '260220241300', 'header' => 'SEDAT AKSU', 'filter' => 0);
-    $sms = new SmsSend;
-    $cevap = $sms->smsGonderNN($msGsm, $data);
-    dd($cevap);
-    die;
-
- 
 
   }
   public function index($id)
@@ -103,8 +123,21 @@ class CalenderController extends Controller
 
       ]);
     }
+    $halisaha = \DB::table("halisaha")->where("id", $request->sahaId)->first();
+    $user = \DB::table("users")->where("id", $halisaha->userId)->first();
+    $sms = new SmsSend;
+    $data = array(
+      'msgheader' => "SEDAT AKSU",
+      'gsm' => $request->userinfo,
+      'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyonunuz oluşturulmuştur.",
+      'filter' => '0',
+      'startdate' => '270120230950',
+      'stopdate' => '270120231030',
+    );
 
-    //  return redirect()->route("calenders.calender")->with('success', 'Ekleme İşlemi Başarılı');
+    $sonuc = $sms->smsgonder1_1($data);
+
+
 
   }
 

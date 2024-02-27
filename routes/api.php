@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
  
     Route::get('/userGet', [UserApiController::class, 'userGet']);
-    Route::get('/halisahagetAll', [UserApiController::class, 'halisahagetAll']);
+    Route::get('/halisahagetAll/{id}/{addweek}', [UserApiController::class, 'halisahagetAll']);
     Route::get('/halisahadetail/{id}', [UserApiController::class, 'halisahadetail']);
     Route::post('/halisahaedit', [UserApiController::class, 'halisahaedit']);
     Route::get('/halisahadelete/{id}', [UserApiController::class, 'halisahadelete']);

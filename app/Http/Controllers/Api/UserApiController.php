@@ -68,7 +68,7 @@ class UserApiController extends Controller
 
             return response()->json([
                 'status' => 401,
-                'message' => 'Unauthenticated.'
+                'message' => 'Email veya şifrsi yanlış.'
             ], 401);
         } catch (\Throwable $th) {
             return response()->json([
@@ -95,13 +95,10 @@ class UserApiController extends Controller
             ], 200);
         }
 
-    }
-    public function halisahagetAll()
+    }  
+
+    public function halisahagetAll($id, $addweek)
     {
-
-
-
-
         try {
             $user = Auth::guard('api')->user();
             if (!$user) {
@@ -110,75 +107,80 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $halisahasid = \DB::table("halisaha")->where("userId", $user->id)->first();
-            $id = $halisahasid->id;
-            $halisahas = \DB::table("halisaha")->where("id", $id)->first();
-            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
 
-            $acilissaati = $halisahas->starthour;
-            $kapanissaati = $halisahas->endhour;
-            $macsuresi = $halisahas->macsuresi;
-            $offdays = $halisahas->offdays;
+            
+      $halisaha = \DB::table("halisaha")->where("id", $id)->first();
+      $userId = $user->id;
+      $allsaha = \DB::table("halisaha")->where("userId", $userId)->get();
+  
+      $acilissaati = $halisaha->starthour;
+      $kapanissaati = $halisaha->endhour;
+      $macsuresi = $halisaha->macsuresi;
+      $offdays = $halisaha->offdays;
+  
+      $events = \DB::table("events")->where("sahaId", $id)->where("deleted", 0)->get();
+      $appointments = json_decode($events, true);
+  
+      // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
+      $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
+      $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
+  
+      // Rezervasyon aralığını Carbon nesnesine dönüştürme
+      $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
+  
+      // Rezervasyon sürelerini liste olarak oluşturma
+      $reservationTimes = [];
+      $currentReservationTime = $openingTime->copy();
+  
+      while ($currentReservationTime->lte($closingTime)) {
+        $reservationStart = $currentReservationTime->format('H:i:s');
+        $currentReservationTime->add($reservationInterval);
+        $reservationEnd = $currentReservationTime->format('H:i:s');
+        $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
+      }
+      $now = \Carbon\Carbon::now();
+  
+      // Şu anki tarih ve saat
+      if ($addweek > 0) {
+        for ($i = 0; $i < $addweek; $i++) {
+          $now = $now->addWeek();
+        }
+      } elseif ($addweek < 0) {
+        for ($i = 0; $i > $addweek; $i--) {
+          $now = $now->subWeek();
+        }
+      } else {
+        $addweek = 0;
+      }
+  
+      // Haftanın günlerini ve tarihlerini alalım
+      $filteredDays = [];
+      for ($i = \Carbon\Carbon::SUNDAY; $i <= \Carbon\Carbon::SATURDAY; $i++) {
+        // Haftanın günlerini ve tarihlerini alırken isimlerini de alacağız
+        $day = $now->copy()->startOfWeek()->addDays($i);
+        $filteredDays[] = [
+          'tarih' => $day->format('Y-m-d'),
+          'gun_ismi' => $day->locale('tr')->dayName,
+        ];
+      }
+  
+      // Gerekli bilgileri döndür
+      return response()->json([
+        'halisaha' => $halisaha,
+        'appointments' => $appointments,
+        'acilissaati' => $acilissaati,
+        'kapanissaati' => $kapanissaati,
+        'macsuresi' => $macsuresi,
+        'filteredDays' => $filteredDays,
+        'offdays' => $offdays,
+        'allsaha' => $allsaha,
+        'events' => $events,
+        'id' => $id,
+        'reservationTimes' => $reservationTimes,
+        'addweek' => $addweek
+      ]);
 
-            $events = \DB::table("events")->where("sahaId", $id)->where("deleted", 0)->get();
-            $halisaha = \DB::table("halisaha")->where("userId", $user->id)->get();
-
-            $appointments = json_decode($events, true);
-
-
-
-
-
-
-
-            // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
-            $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
-
-            $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
-
-            // Rezervasyon aralığını Carbon nesnesine dönüştürme
-            $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
-
-
-            // Rezervasyon sürelerini liste olarak oluşturma
-            $reservationTimes = [];
-            $currentReservationTime = $openingTime->copy();
-
-            while ($currentReservationTime->lte($closingTime)) {
-                $reservationStart = $currentReservationTime->format('H:i:s');
-                $currentReservationTime->add($reservationInterval);
-                $reservationEnd = $currentReservationTime->format('H:i:s');
-                $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
-            }
-
-            $now = Carbon::now();
-
-            // Haftanın günlerini ve tarihlerini alalım
-            $filteredDays = [];
-            for ($i = Carbon::SUNDAY; $i <= Carbon::SATURDAY; $i++) {
-                // Haftanın günlerini ve tarihlerini alırken isimlerini de alacağız
-                $gun = $now->copy()->startOfWeek()->addDays($i);
-                $filteredDays[] = [
-                    'tarih' => $gun->format('Y-m-d'),
-                    'gun_ismi' => $gun->locale('tr')->dayName,
-                ];
-            }
-            $addweek = 0;
-
-            return response()->json([
-                'halisaha' => $halisaha,
-                'appointments' => $appointments,
-                'acilissaati' => $acilissaati,
-                'kapanissaati' => $kapanissaati,
-                'addweek' => $addweek,
-                'macsuresi' => $macsuresi,
-                'filteredDays' => $filteredDays,
-                'offdays' => $offdays,
-                'allsaha' => $allsaha,
-                'events' => $events,
-                'id' => $id,
-                'reservationTimes' => $reservationTimes
-            ]);
+       
         } catch (\Throwable $th) {
 
             return response()->json([

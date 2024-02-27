@@ -87,12 +87,12 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
+            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->first();
 
             return response()->json([
                 'status' => 200,
                 'user' => $user,
-                'halisaha' => $user,
+                'halisaha' => $allsaha,
 
             ]);
          } catch (\Throwable $th) {

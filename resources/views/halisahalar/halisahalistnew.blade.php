@@ -133,7 +133,7 @@
             margin: 0px !important;
             padding: 5px !important;
             font-size: 12px;
-            font-weight:800;
+            font-weight: 800;
 
         }
 
@@ -176,6 +176,17 @@
             margin-bottom: 10px;
 
         }
+        #now{
+            width: 85px;
+            height: 40px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+
+        }
+
+
 
         th {
             background-color: #f2f2f2;
@@ -308,9 +319,11 @@
                                         });
 
                                         if (!reserved) {
-                                            const bugun = new Date().toISOString().slice(0, 10);
-                                    const tarih = day.tarih;
-                                    const renk = tarih === bugun ? '#f0ba65' : '';
+                                            const bugun = new Date().toISOString()
+                                                .slice(0, 10);
+                                            const tarih = day.tarih;
+                                            const renk = tarih === bugun ? '#f0ba65' :
+                                                '';
                                             htmlContent += `
                                             <td id="bos" style="background-color:${renk}" data-id="${data.id}"
     data-original-content="BOŞ"
@@ -395,6 +408,23 @@
 
                     fetchData(sahaninidsi, week);
                 }
+                var prewbutton = document.getElementById("now");
+                if (prewbutton) {
+                    prewbutton.addEventListener("click", handleClicknow);
+                }
+
+
+                function handleClicknow(event) {
+                    var getgetweekval = document.getElementById("getweekval").value;
+
+
+                    week = 0;
+
+                    fetchData(sahaninidsi, week);
+                }
+
+
+
 
             });
 
@@ -432,8 +462,12 @@
                         <div class="float-right">
                             <input type="hidden" value="${data.addweek}" id='addweek'>
                             <button id="prev" class="btn btn-dark"> Önceki </button>
+                            <button id="now" class="btn btn-dark"
+                                style="background-color: #f09f22;  border:#f09f22"> Bugün </button>
 
-                            <button id="next" class="btn btn-success ml-5" style="background-color: #f09f22;  border:#f09f22"> Sonraki </button>
+                            <button id="next" class="btn btn-dark"> Sonraki </button>
+
+
                         </div>
                     </div>
                 </div>

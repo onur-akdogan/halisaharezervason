@@ -48,7 +48,7 @@
         .nav-pills .nav-link.active,
         .nav-pills .show>.nav-link {
             color: #fff;
-            background-color: #198754;
+            background-color: #f09f22;
         }
 
         table {
@@ -64,7 +64,7 @@
         #bos {
             max-height: 20px !important;
             background-color: #d9d9d9;
-            color: #3d3d3d;
+            color: #000000;
             margin: 0px !important;
             padding: 0px !important;
             border-radius: 12px;
@@ -123,7 +123,7 @@
             border: 1px solid #ccc;
             text-align: center;
             background-color: white;
-            color: #356000;
+            color: #3f2e5a;
             max-height: 5px !important;
             max-width: 55px;
             min-width: 50px;
@@ -131,9 +131,9 @@
 
 
             margin: 0px !important;
-            padding: 0px !important;
+            padding: 5px !important;
             font-size: 12px;
-
+            font-weight:800;
 
         }
 
@@ -142,7 +142,7 @@
             padding: 1px;
             text-align: center;
             background-color: white;
-            color: #356000;
+            color: #3f2e5a;
             min-width: 10%;
             font-size: 14px;
             font-weight: bold;
@@ -237,7 +237,7 @@
                                 data.filteredDays.forEach(day => {
                                     const bugun = new Date().toISOString().slice(0, 10);
                                     const tarih = day.tarih;
-                                    const renk = tarih === bugun ? 'red' : '';
+                                    const renk = tarih === bugun ? '#f09f22' : '';
 
                                     htmlContent += `
                                 <th id="dayname" style="color: ${renk} !important">
@@ -308,8 +308,11 @@
                                         });
 
                                         if (!reserved) {
+                                            const bugun = new Date().toISOString().slice(0, 10);
+                                    const tarih = day.tarih;
+                                    const renk = tarih === bugun ? '#f0ba65' : '';
                                             htmlContent += `
-                                            <td id="bos" data-id="${data.id}"
+                                            <td id="bos" style="background-color:${renk}" data-id="${data.id}"
     data-original-content="BOŞ"
     data-bs="${reservation.start}"
     data-nowDate="${new Date().toISOString().slice(0, 10)}"
@@ -430,7 +433,7 @@
                             <input type="hidden" value="${data.addweek}" id='addweek'>
                             <button id="prev" class="btn btn-dark"> Önceki </button>
 
-                            <button id="next" class="btn btn-success ml-5"> Sonraki </button>
+                            <button id="next" class="btn btn-success ml-5" style="background-color: #f09f22;  border:#f09f22"> Sonraki </button>
                         </div>
                     </div>
                 </div>

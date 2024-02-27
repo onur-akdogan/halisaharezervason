@@ -87,8 +87,15 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            return $user;
-        } catch (\Throwable $th) {
+            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
+
+            return response()->json([
+                'status' => 200,
+                'user' => $user,
+                'halisaha' => $user,
+
+            ]);
+         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 409,
                 "İşlem Hatası "

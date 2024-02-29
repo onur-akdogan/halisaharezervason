@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
     Route::get('/halisahadelete/{id}', [UserApiController::class, 'halisahadelete']);
     Route::get('/musteriget', [UserApiController::class, 'musteriget']);
     Route::get('/abones', [UserApiController::class, 'abones']);
+    Route::get('/iptalsget', [UserApiController::class, 'iptalsget']);
 
     
 });

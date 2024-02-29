@@ -33,7 +33,7 @@ class CalenderController extends Controller
       if ($now->diffInMinutes($eventDateTime) <= 30) {
         $sms = new SmsSend;
         $data = array(
-          'msgheader' => "SEDAT AKSU",
+          'msgheader' => "8503085771",
           'gsm' => $event->userinfo,
           'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz.",
           'filter' => '0',
@@ -125,9 +125,9 @@ class CalenderController extends Controller
     $user = \DB::table("users")->where("id", $halisaha->userId)->first();
     $sms = new SmsSend;
     $data = array(
-      'msgheader' => "SEDAT AKSU",
+      'msgheader' => "8503085771",
       'gsm' => $request->userinfo,
-      'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyonunuz oluşturulmuştur.",
+      'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur.",
       'filter' => '0',
       'startdate' => '270120230950',
       'stopdate' => '270120231030',
@@ -155,8 +155,30 @@ class CalenderController extends Controller
   }
   public function delete($id)
   {
+   
     $events = \DB::table("events")->where("id", $id)->update(["deleted" => 1]);
-    return redirect()->back()->with('success', 'Silme İşlemi Başarılı');
+    $eventsget = \DB::table("events")->where("id", $id)->first();
+    $halisaha = \DB::table("halisaha")->where("id", $eventsget->sahaId)->first();
+    $username = \DB::table("users")->where("id", $halisaha->userId)->first();
+
+     
+    $tarihMetni = $eventsget->date;
+ 
+    // Sonucu yazdırma
+    $tarihMetni = Carbon::parse($tarihMetni);
+    $sms = new SmsSend; 
+    $data = array(
+      'msgheader' => "8503085771",
+      'gsm' => $eventsget->userinfo,
+      'message' => "Sayın " . $eventsget->userName . ' ' . $username->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon iptal edilmiştir.",
+      'filter' => '0',
+      'startdate' => '270120230950',
+      'stopdate' => '270120231030',
+    );
+
+    $sonuc = $sms->smsgonder1_1($data);
+
+    return redirect()->back()->with('success', 'İptal İşlemi Başarılı');
 
   }
   public function apicalender($id, $addweek)

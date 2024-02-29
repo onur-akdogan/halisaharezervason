@@ -23,6 +23,10 @@ class UserController extends Controller
     }
     public function musteriler()
     {
+        $sahalar = \DB::table("halisaha")
+        ->where("userId", \Auth::user()->id)
+        ->orderByDesc('id')
+        ->pluck("id"); // saha id'lerini bir dizi olarak al
 
         $oldusers = [];
         $users = [];
@@ -31,15 +35,18 @@ class UserController extends Controller
             ->where("userId", \Auth::user()->id)
             ->get();
 
-        foreach ($halisahalar as $item) {
+    
       
             $events = \DB::table("events")
                 ->select('userinfo')
-                ->where("sahaId", $item->id)
+                ->orderByDesc('id')
+
+                ->whereIn("sahaId", $sahalar)
                 ->groupBy('userinfo')  // Include 'userName' in GROUP BY
                 ->get();
             $eventsall = \DB::table("events")
-                ->where("sahaId", $item->id)
+            ->whereIn("sahaId", $sahalar)
+                ->orderByDesc('id')
                 ->get();
 
 
@@ -52,7 +59,7 @@ class UserController extends Controller
 
             }
 
-        }
+   
 
         foreach ($oldeventsall as $item) {
 
@@ -83,14 +90,23 @@ class UserController extends Controller
     }
     public function musterileriptal()
     {
-
+ 
+        $sahalar = \DB::table("halisaha")
+        ->where("userId", \Auth::user()->id)
+        ->orderByDesc('id')
+        ->pluck("id"); // saha id'lerini bir dizi olarak al
+    
         $users = [];
 
 
 
 
         $users = \DB::table("events")
+        ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
+
             ->where("deleted", 1)
+            
+            ->orderByDesc('id')
             ->get();
 
 
@@ -101,18 +117,16 @@ class UserController extends Controller
     }
     public function aboneler()
     {
-
-        $users = [];
-
-
-
-
-        $users = \DB::table("aboneler")
-            ->get();
-
-
-
-
+        
+        $sahalar = \DB::table("halisaha")
+        ->where("userId", \Auth::user()->id)
+        ->orderByDesc('id')
+        ->pluck("id"); // saha id'lerini bir dizi olarak al
+    
+    $users = \DB::table("aboneler")
+        ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
+        ->orderByDesc('id')
+        ->get();
 
         return view('users.aboneler', compact('users'));
     }

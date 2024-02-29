@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
        
     $nowTime = Carbon::now();
-    $thirtyMinutesLater = $nowTime->copy()->addMinutes(30);
+    $thirtyMinutesLater = $nowTime->copy()->addMinutes(90);
 
     $events = \DB::table("events")
       ->where("smsstatus", 0)
@@ -36,10 +36,10 @@ class Kernel extends ConsoleKernel
       $diffInMinutes = $now->diffInMinutes($eventDateTime);
  
       // Eğer etkinlik tarihine 30 dakika veya daha az kaldıysa SMS gönder
-      if ($now->diffInMinutes($eventDateTime) <= 30) {
+      if ($now->diffInMinutes($eventDateTime) <= 90) {
         $sms = new SmsSend;
         $data = array(
-          'msgheader' => "SEDAT AKSU",
+          'msgheader' => "8503085771",
           'gsm' => $event->userinfo,
           'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz.",
           'filter' => '0',

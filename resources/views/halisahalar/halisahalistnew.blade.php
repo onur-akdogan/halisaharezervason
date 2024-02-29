@@ -91,7 +91,7 @@
 
         #abone {
             max-height: 20px !important;
-            background-color: #6547b7;
+            background-color: #bd0101;
             color: white;
             margin: 0px !important;
             padding: 0px !important;
@@ -581,7 +581,7 @@
                                <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi" value=` +
                             userName + `>
                             <label>Telefon Numarasını Başında "0" Olmadan Yazın</label>
-                               <input type="text" name="userinfo" class="swal2-input"  value= ` + contact + ` placeholder="İrtibat Numarası"</div>
+                               <input type="tel"  name="userinfo" class="swal2-input"  value= ` + contact + ` placeholder="İrtibat Numarası"></div>
                            <input type="text" name="note" class="swal2-input" placeholder="Not"  value=` + userinfo + `>
                                `,
                         showCancelButton: false,
@@ -708,7 +708,7 @@
                                 <label>Ulaşılacak Kişinin İsmi</label>
                                 <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi">
                                 <label>Telefon Numarasını Başında "0" Olmadan Yazın</label>
-                                <input type="text" name="userinfo" class="swal2-input" placeholder="İrtibat Numarası">
+                                <input type="tel"  name="userinfo" class="swal2-input" placeholder="İrtibat Numarası"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
                             </div>
                             <input type="text" name="note" class="swal2-input" placeholder="Not">
                         `,

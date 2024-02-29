@@ -317,7 +317,6 @@ class UserApiController extends Controller
     }
     public function musteriget()
     {
-        ini_set('memory_limit', '-1');
         try {
             $user = Auth::guard('api')->user();
             if (!$user) {
@@ -326,40 +325,75 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-    
+            $oldusers = [];
             $users = [];
-    
+            $oldeventsall = [];
             $halisahalar = \DB::table("halisaha")
                 ->where("userId", $user->id)
                 ->get();
-    
+
             foreach ($halisahalar as $item) {
+
                 $events = \DB::table("events")
                     ->select('userinfo')
                     ->where("sahaId", $item->id)
-                    ->distinct() // Bu satır eklenerek farklı kullanıcıları alıyoruz
+                    ->groupBy('userinfo')  // Include 'userName' in GROUP BY
                     ->get();
-    
+                $eventsall = \DB::table("events")
+                    ->where("sahaId", $item->id)
+                    ->get();
+
+
+                foreach ($eventsall as $item) {
+                    $oldeventsall[] = $item;
+
+                }
                 foreach ($events as $event) {
-                    $users[] = $event->userinfo;
+                    $oldusers[] = $event;
+
+                }
+
+            }
+
+            foreach ($oldeventsall as $item) {
+
+                foreach ($oldusers as $event) {
+                    if ($event->userinfo == $item->userinfo) {
+                        if ($users == []) {
+                            $users[] = $item;
+                        } else {
+
+                            foreach ($users as $user) {
+                                if ($user->userinfo == $item->userinfo) {
+
+
+                                } else {
+                                    $users[] = $item;
+                                }
+                            }
+
+                        }
+
+                    }
+
                 }
             }
-    
-            $uniqueUsers = array_unique($users); // Tekrar eden kullanıcıları kaldır
-    
+
+
             return response()->json([
                 'status' => 200,
-                'data' => $uniqueUsers
+                'data' => $users
+
             ]);
-    
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 409,
                 "İşlem Hatası "
             ], 200);
         }
+
     }
-    
 
     public function iptalsget()
     {

@@ -317,6 +317,7 @@ class UserApiController extends Controller
     }
     public function musteriget()
     {
+        ini_set('memory_limit', '-1');
         try {
             $user = Auth::guard('api')->user();
             if (!$user) {

@@ -326,75 +326,40 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $oldusers = [];
+    
             $users = [];
-            $oldeventsall = [];
+    
             $halisahalar = \DB::table("halisaha")
                 ->where("userId", $user->id)
                 ->get();
-
+    
             foreach ($halisahalar as $item) {
-
                 $events = \DB::table("events")
                     ->select('userinfo')
                     ->where("sahaId", $item->id)
-                    ->groupBy('userinfo')  // Include 'userName' in GROUP BY
+                    ->distinct() // Bu satır eklenerek farklı kullanıcıları alıyoruz
                     ->get();
-                $eventsall = \DB::table("events")
-                    ->where("sahaId", $item->id)
-                    ->get();
-
-
-                foreach ($eventsall as $item) {
-                    $oldeventsall[] = $item;
-
-                }
+    
                 foreach ($events as $event) {
-                    $oldusers[] = $event;
-
-                }
-
-            }
-
-            foreach ($oldeventsall as $item) {
-
-                foreach ($oldusers as $event) {
-                    if ($event->userinfo == $item->userinfo) {
-                        if ($users == []) {
-                            $users[] = $item;
-                        } else {
-
-                            foreach ($users as $user) {
-                                if ($user->userinfo == $item->userinfo) {
-
-
-                                } else {
-                                    $users[] = $item;
-                                }
-                            }
-
-                        }
-
-                    }
-
+                    $users[] = $event->userinfo;
                 }
             }
-
-
+    
+            $uniqueUsers = array_unique($users); // Tekrar eden kullanıcıları kaldır
+    
             return response()->json([
                 'status' => 200,
-                'data' => $users
-
+                'data' => $uniqueUsers
             ]);
-
+    
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 409,
                 "İşlem Hatası "
             ], 200);
         }
-
     }
+    
 
     public function iptalsget()
     {

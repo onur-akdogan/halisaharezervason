@@ -325,59 +325,32 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $oldusers = [];
-            $users = [];
-            $oldeventsall = [];
-            $halisahalar = \DB::table("halisaha")
-                ->where("userId", $user->id)
-                ->get();
-
-            foreach ($halisahalar as $item) {
-
-                $events = \DB::table("events")
-                    ->select('userinfo')
-                    ->where("sahaId", $item->id)
-                    ->groupBy('userinfo')  // Include 'userName' in GROUP BY
-                    ->get();
-                $eventsall = \DB::table("events")
-                    ->where("sahaId", $item->id)
-                    ->get();
-
-
-                foreach ($eventsall as $item) {
-                    $oldeventsall[] = $item;
-
-                }
-                foreach ($events as $event) {
-                    $oldusers[] = $event;
-
-                }
-
+            $sahalar = \DB::table("halisaha")
+            ->where("userId",   $user->id)
+            ->pluck("id"); // saha id'lerini bir dizi olarak al
+    
+        $users = [];
+    
+        $events = \DB::table("events")
+            ->select('userinfo')
+            ->whereIn("sahaId", $sahalar)
+            ->groupBy('userinfo') // userinfo'ya göre grupla
+            ->orderByDesc('id')
+            ->get();
+    
+        foreach ($events as $event) {
+            $latestEvent = \DB::table("events")
+                ->whereIn("sahaId", $sahalar)
+                ->where('userinfo', $event->userinfo)
+                ->orderByDesc('id')
+                ->first();
+    
+            // Kullanıcı bilgisine göre son etkinliği al
+            if ($latestEvent) {
+                $users[] = $latestEvent;
             }
-
-            foreach ($oldeventsall as $item) {
-
-                foreach ($oldusers as $event) {
-                    if ($event->userinfo == $item->userinfo) {
-                        if ($users == []) {
-                            $users[] = $item;
-                        } else {
-
-                            foreach ($users as $user) {
-                                if ($user->userinfo == $item->userinfo) {
-
-
-                                } else {
-                                    $users[] = $item;
-                                }
-                            }
-
-                        }
-
-                    }
-
-                }
-            }
+        }
+    
 
 
             return response()->json([

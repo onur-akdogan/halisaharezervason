@@ -27,7 +27,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
     Route::get('/abones', [UserApiController::class, 'abones']);
     Route::get('/iptalsget', [UserApiController::class, 'iptalsget']);
 
-    
+    Route::get('/deleteback/{id}', [UserApiController::class, 'deleteback'])->name('calender.deleteback');
+
 });
 
 

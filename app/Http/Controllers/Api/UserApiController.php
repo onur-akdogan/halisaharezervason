@@ -427,6 +427,28 @@ class UserApiController extends Controller
         }
 
     }
+    public function deleteback($id)
+    {
+  
+      try {
+        $events = \DB::table("events")->where("id", $id)->update(["deleted" => 0]);
+   
+   
+   
+  
+  
+      return response()->json([
+        'status' => 200,
+        'message' => "İşlem Başarılı"
 
+    ]);
+      } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 409,
+            'message' => "İşlem Başarısız"
+    
+        ]);      }
+  
+    }
 
 }

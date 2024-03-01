@@ -35,6 +35,9 @@
                                 <th scope="col">Not</th>
 
                                 <th scope="col">Rezervasyon Tarihi</th>
+                                <th scope="col"></th>
+
+                                
                               </tr>
                             </thead>
                             <tbody>
@@ -49,6 +52,8 @@
                                 
                                 
                                }}</td>
+                                    <td><a class="btn btn-success" href="{{route('calender.deleteback',$item->id)}}">Geri Çek</a> </td>
+                               
                               </tr>
                            
                     @endforeach

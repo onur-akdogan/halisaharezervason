@@ -48,7 +48,9 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
 
   
     Route::get('/calender/{id}', [CalenderController::class, 'delete'])->name('calender.delete');
+    Route::get('/deleteback/{id}', [CalenderController::class, 'deleteback'])->name('calender.deleteback');
 
+     
     Route::get('/halisahaindex', [HalisahaController::class, 'index'])->name('halisaha.index');
     Route::get('/allindex', [HalisahaController::class, 'allindex'])->name('halisaha.allindex');
 

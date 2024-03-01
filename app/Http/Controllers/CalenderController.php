@@ -193,6 +193,19 @@ class CalenderController extends Controller
     return redirect()->back()->with('success', 'İptal İşlemi Başarılı');
 
   }
+
+  public function deleteback($id)
+  {
+
+    $events = \DB::table("events")->where("id", $id)->update(["deleted" => 0]);
+ 
+ 
+ 
+
+    return redirect()->back()->with('success', 'İşlem Başarılı');
+
+  }
+
   public function apicalender($id, $addweek)
   {
     $halisaha = \DB::table("halisaha")->where("id", $id)->first();

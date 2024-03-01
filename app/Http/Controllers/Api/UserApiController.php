@@ -452,6 +452,7 @@ class UserApiController extends Controller
     }
 
     public function getallhalisaha(){
+        try{
         $user = Auth::guard('api')->user();
         if (!$user) {
             return response()->json([
@@ -460,7 +461,16 @@ class UserApiController extends Controller
             ]);
         }
         $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
-
+        return response()->json([
+            'status' => 200,
+            'data' => $allsaha
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 409,
+            "İşlem Hatası "
+        ], 200);
+    }
     }
 
 }

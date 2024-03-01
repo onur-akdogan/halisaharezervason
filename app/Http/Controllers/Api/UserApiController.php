@@ -451,4 +451,16 @@ class UserApiController extends Controller
   
     }
 
+    public function getallhalisaha(){
+        $user = Auth::guard('api')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthenticated.'
+            ]);
+        }
+        $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
+
+    }
+
 }

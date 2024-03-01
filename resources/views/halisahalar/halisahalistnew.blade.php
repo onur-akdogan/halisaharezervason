@@ -527,9 +527,8 @@
             Swal.fire({
                 background: 'white',
 
-                title: "<h3 style='color:black'>İsim: " + userName + "</h3>",
-
-                html: "<h5 style='color:black'> İletişim:" + contact + "</h5>" +
+                title: "<h5 style='color:black'> Rezervasyon Tarihi: " + formattedDateTime + "</h5>"+"<h5 style='color:black'>İsim: " + userName + "</h5>"+
+                 "<h5 style='color:black'> İletişim:" + contact + "</h5>" +
                     "<h5 style='color:black'> Not:" + userinfo + "</h5>",
                 icon: "info",
 

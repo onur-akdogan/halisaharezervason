@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
         $data = array(
           'msgheader' => "8503085771",
           'gsm' => $event->userinfo,
-          'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz.",
+          'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz. Halisaha iletişim:" .$user->phone,
           'filter' => '0',
           'startdate' => '270120230950',
           'stopdate' => '270120231030',

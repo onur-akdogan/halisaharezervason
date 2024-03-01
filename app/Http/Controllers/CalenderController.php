@@ -28,14 +28,14 @@ class CalenderController extends Controller
       $eventDateTime = Carbon::parse($event->date);
       $now = Carbon::now();
       $diffInMinutes = $now->diffInMinutes($eventDateTime);
- 
+
       // Eğer etkinlik tarihine 30 dakika veya daha az kaldıysa SMS gönder
       if ($now->diffInMinutes($eventDateTime) <= 30) {
         $sms = new SmsSend;
         $data = array(
           'msgheader' => "8503085771",
           'gsm' => $event->userinfo,
-          'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz.",
+          'message' => "Sayın " . $event->userName . " " . $user->name . " halısaha'da " . "" . $event->date . " maçınıza bekliyoruz. Halisaha iletişim:" .$user->phone,
           'filter' => '0',
           'startdate' => '270120230950',
           'stopdate' => '270120231030',
@@ -123,16 +123,28 @@ class CalenderController extends Controller
     }
     $halisaha = \DB::table("halisaha")->where("id", $request->sahaId)->first();
     $user = \DB::table("users")->where("id", $halisaha->userId)->first();
-    $sms = new SmsSend;
-    $data = array(
-      'msgheader' => "8503085771",
-      'gsm' => $request->userinfo,
-      'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur.",
-      'filter' => '0',
-      'startdate' => '270120230950',
-      'stopdate' => '270120231030',
-    );
+    if ($request->aboneTime > 0) {
+      $sms = new SmsSend;
+      $data = array(
+        'msgheader' => "8503085771",
+        'gsm' => $request->userinfo,
+        'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " aboneliğiniz ".$request->aboneTime/4 ." aylık (".$request->aboneTime." Hafta) oluşturulmuştur. Halisaha iletişim:" .$user->phone,
+        'filter' => '0',
+        'startdate' => '270120230950',
+        'stopdate' => '270120231030',
+      );
 
+    } else {
+      $sms = new SmsSend;
+      $data = array(
+        'msgheader' => "8503085771",
+        'gsm' => $request->userinfo,
+        'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur. Halisaha iletişim:" .$user->phone,
+        'filter' => '0',
+        'startdate' => '270120230950',
+        'stopdate' => '270120231030',
+      );
+    }
     $sonuc = $sms->smsgonder1_1($data);
 
 
@@ -155,22 +167,22 @@ class CalenderController extends Controller
   }
   public function delete($id)
   {
-   
+
     $events = \DB::table("events")->where("id", $id)->update(["deleted" => 1]);
     $eventsget = \DB::table("events")->where("id", $id)->first();
     $halisaha = \DB::table("halisaha")->where("id", $eventsget->sahaId)->first();
     $username = \DB::table("users")->where("id", $halisaha->userId)->first();
 
-     
+
     $tarihMetni = $eventsget->date;
- 
+
     // Sonucu yazdırma
     $tarihMetni = Carbon::parse($tarihMetni);
-    $sms = new SmsSend; 
+    $sms = new SmsSend;
     $data = array(
       'msgheader' => "8503085771",
       'gsm' => $eventsget->userinfo,
-      'message' => "Sayın " . $eventsget->userName . ' ' . $username->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon iptal edilmiştir.",
+      'message' => "Sayın " . $eventsget->userName . ' ' . $username->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon iptal edilmiştir. Halisaha iletişim:" .$username->phone,
       'filter' => '0',
       'startdate' => '270120230950',
       'stopdate' => '270120231030',

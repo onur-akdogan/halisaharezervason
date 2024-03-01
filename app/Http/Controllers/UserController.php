@@ -24,60 +24,52 @@ class UserController extends Controller
     public function musteriler()
     {
         $sahalar = \DB::table("halisaha")
-        ->where("userId", \Auth::user()->id)
-        ->orderByDesc('id')
-        ->pluck("id"); // saha id'lerini bir dizi olarak al
+            ->where("userId", \Auth::user()->id)
+            ->orderByDesc('id')
+            ->pluck("id"); // saha id'lerini bir dizi olarak al
 
-        $oldusers = [];
+
         $users = [];
-        $oldeventsall = [];
+
         $halisahalar = \DB::table("halisaha")
             ->where("userId", \Auth::user()->id)
             ->get();
 
-    
-      
-            $events = \DB::table("events")
-                ->select('userinfo')
-                ->orderByDesc('id')
 
-                ->whereIn("sahaId", $sahalar)
-                ->groupBy('userinfo')  // Include 'userName' in GROUP BY
-                ->get();
-            $eventsall = \DB::table("events")
+
+        $events = \DB::table("events")
+            ->select('userinfo')
+            ->orderByDesc('id')
+
             ->whereIn("sahaId", $sahalar)
-                ->orderByDesc('id')
-                ->get();
+            ->groupBy('userinfo')  // Include 'userName' in GROUP BY
+            ->get();
+        $eventsall = \DB::table("events")
+            ->whereIn("sahaId", $sahalar)
+            ->orderByDesc('id')
+            ->get();
 
 
-            foreach ($eventsall as $item) {
-                $oldeventsall[] = $item;
 
-            }
+
+
+        foreach ($eventsall as $item) {
+
             foreach ($events as $event) {
-                $oldusers[] = $event;
-
-            }
-
-   
-
-        foreach ($oldeventsall as $item) {
-
-            foreach ($oldusers as $event) {
                 if ($event->userinfo == $item->userinfo) {
-                    if(  $users == [] ){
+                    if ($users == []) {
                         $users[] = $item;
-                    }else{
-                        
-                            foreach ($users as $user) {
-                                if ($user->userinfo == $item->userinfo) {
-        
-        
-                                } else {
-                                    $users[] = $item;
-                                }
+                    } else {
+
+                        foreach ($users as $user) {
+                            if ($user->userinfo == $item->userinfo) {
+
+
+                            } else {
+                                $users[] = $item;
                             }
-                       
+                        }
+
                     }
 
                 }
@@ -90,22 +82,22 @@ class UserController extends Controller
     }
     public function musterileriptal()
     {
- 
+
         $sahalar = \DB::table("halisaha")
-        ->where("userId", \Auth::user()->id)
-        ->orderByDesc('id')
-        ->pluck("id"); // saha id'lerini bir dizi olarak al
-    
+            ->where("userId", \Auth::user()->id)
+            ->orderByDesc('id')
+            ->pluck("id"); // saha id'lerini bir dizi olarak al
+
         $users = [];
 
 
 
 
         $users = \DB::table("events")
-        ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
+            ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
 
             ->where("deleted", 1)
-            
+
             ->orderByDesc('id')
             ->get();
 
@@ -117,16 +109,16 @@ class UserController extends Controller
     }
     public function aboneler()
     {
-        
+
         $sahalar = \DB::table("halisaha")
-        ->where("userId", \Auth::user()->id)
-        ->orderByDesc('id')
-        ->pluck("id"); // saha id'lerini bir dizi olarak al
-    
-    $users = \DB::table("aboneler")
-        ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
-        ->orderByDesc('id')
-        ->get();
+            ->where("userId", \Auth::user()->id)
+            ->orderByDesc('id')
+            ->pluck("id"); // saha id'lerini bir dizi olarak al
+
+        $users = \DB::table("aboneler")
+            ->whereIn("sahaId", $sahalar) // saha id'leri içinde olan aboneleri al
+            ->orderByDesc('id')
+            ->get();
 
         return view('users.aboneler', compact('users'));
     }

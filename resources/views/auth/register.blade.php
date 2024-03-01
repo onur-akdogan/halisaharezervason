@@ -43,6 +43,8 @@
                             name="password"
                             required autocomplete="new-password" />
 
+                            
+
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 

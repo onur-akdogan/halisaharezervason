@@ -25,59 +25,30 @@ class UserController extends Controller
     {
         $sahalar = \DB::table("halisaha")
             ->where("userId", \Auth::user()->id)
-            ->orderByDesc('id')
             ->pluck("id"); // saha id'lerini bir dizi olarak al
-
-
+    
         $users = [];
-
-        $halisahalar = \DB::table("halisaha")
-            ->where("userId", \Auth::user()->id)
-            ->get();
-
-
-
+    
         $events = \DB::table("events")
             ->select('userinfo')
-            ->orderByDesc('id')
-
             ->whereIn("sahaId", $sahalar)
-            ->groupBy('userinfo')  // Include 'userName' in GROUP BY
-            ->get();
-        $eventsall = \DB::table("events")
-            ->whereIn("sahaId", $sahalar)
+            ->groupBy('userinfo') // userinfo'ya göre grupla
             ->orderByDesc('id')
             ->get();
-
-
-
-
-
-        foreach ($eventsall as $item) {
-
-            foreach ($events as $event) {
-                if ($event->userinfo == $item->userinfo) {
-                    if ($users == []) {
-                        $users[] = $item;
-                    } else {
-
-                        foreach ($users as $user) {
-                            if ($user->userinfo == $item->userinfo) {
-
-
-                            } else {
-                                $users[] = $item;
-                            }
-                        }
-
-                    }
-
-                }
-
+    
+        foreach ($events as $event) {
+            $latestEvent = \DB::table("events")
+                ->whereIn("sahaId", $sahalar)
+                ->where('userinfo', $event->userinfo)
+                ->orderByDesc('id')
+                ->first();
+    
+            // Kullanıcı bilgisine göre son etkinliği al
+            if ($latestEvent) {
+                $users[] = $latestEvent;
             }
         }
-
-
+    
         return view('users.musteri', compact('users'));
     }
     public function musterileriptal()

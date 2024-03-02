@@ -249,6 +249,43 @@ class UserApiController extends Controller
         }
     }
 
+    public function halisahaadd(Request $request)
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+
+
+
+            \DB::table("halisaha")->insert([
+
+                "userId" => $user->id,
+                "name" => $request->name,
+                "starthour" => $request->starthour,
+                "endhour" => $request->endhour,
+                "macsuresi" => $request->macsuresi,
+                "offdays" => "[]",
+
+
+            ]);
+
+
+            return response()->json([
+                'status' => 200,
+              "message"=>  "Ekleme Başarılı"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 409,
+                "message"=>   "İşlem Hatası "
+            ], 409);
+        }
+    }
     public function halisahaedit(Request $request)
     {
         try {
@@ -259,16 +296,16 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            
-       
+
+
 
             \DB::table("halisaha")->where("id", $request->id)->update([
                 "name" => $request->name,
-       
+
                 "starthour" => $request->starthour,
                 "endhour" => $request->endhour,
                 "macsuresi" => $request->macsuresi,
-             ]);
+            ]);
 
 
             return response()->json([

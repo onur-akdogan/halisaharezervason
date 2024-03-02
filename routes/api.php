@@ -22,6 +22,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
     Route::get('/halisahagetAll/{id}/{addweek}', [UserApiController::class, 'halisahagetAll']);
     Route::get('/halisahadetail/{id}', [UserApiController::class, 'halisahadetail']);
     Route::post('/halisahaedit', [UserApiController::class, 'halisahaedit']);
+    Route::post('/halisahaadd', [UserApiController::class, 'halisahaadd']);
+
+    
     Route::get('/halisahadelete/{id}', [UserApiController::class, 'halisahadelete']);
     Route::get('/musteriget', [UserApiController::class, 'musteriget']);
     Route::get('/abones', [UserApiController::class, 'abones']);

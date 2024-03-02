@@ -264,7 +264,7 @@ class UserApiController extends Controller
 
             \DB::table("halisaha")->where("id", $request->id)->update([
                 "name" => $request->name,
-                "userId" => $user->id,
+       
                 "starthour" => $request->starthour,
                 "endhour" => $request->endhour,
                 "macsuresi" => $request->macsuresi,

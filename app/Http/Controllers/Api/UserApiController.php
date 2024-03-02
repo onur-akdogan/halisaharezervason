@@ -259,30 +259,16 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $newoffdays = [];
-            if ($request->offday != null) {
-                foreach ($request->offday as $offday) {
-                    $newoffdays[] = $offday;
-                }
-            }
-            $resultString = "[" . implode(",", $newoffdays) . "]";
-
-
-
-
-
-            $request->starthour;
-
+            
+       
 
             \DB::table("halisaha")->where("id", $request->id)->update([
                 "name" => $request->name,
                 "userId" => $user->id,
                 "starthour" => $request->starthour,
                 "endhour" => $request->endhour,
-
                 "macsuresi" => $request->macsuresi,
-                "offdays" => $resultString,
-            ]);
+             ]);
 
 
             return response()->json([

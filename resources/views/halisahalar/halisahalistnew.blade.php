@@ -176,7 +176,8 @@
             margin-bottom: 10px;
 
         }
-        #now{
+
+        #now {
             width: 85px;
             height: 40px;
             font-size: 12px;
@@ -298,22 +299,22 @@
                                                 reservationStartMinute) {
                                                 htmlContent += `
                                                 <td id="${appointment.title === 'DOLU' ? 'dolu' : 'abone'}"
-    data-name="${appointment.userName}"
-    data-contact="${appointment.userinfo}"
-    data-note="${appointment.note}"
-    data-eventid="${appointment.id}"
-    data-status="${appointment.title}"
-    data-id="${saha.id}"
-    data-original-content="${appointment.title}"
-    data-bs="${reservation.start}"
-    data-nowDate="${new Date().toISOString().slice(0, 10)}"
-    data-option="${day.tarih}"
-    onmouseover="showDataBs(this)"
-    onmouseout="hideDataBs(this)"
-    onclick="editEvent(this);">
-    ${appointment.title}
-</td>
-`;
+                                                    data-name="${appointment.userName}"
+                                                    data-contact="${appointment.userinfo}"
+                                                    data-note="${appointment.note}"
+                                                    data-eventid="${appointment.id}"
+                                                    data-status="${appointment.title}"
+                                                    data-id="${saha.id}"
+                                                    data-original-content="${appointment.title}"
+                                                    data-bs="${reservation.start}"
+                                                    data-nowDate="${new Date().toISOString().slice(0, 10)}"
+                                                    data-option="${day.tarih}"
+                                                    onmouseover="showDataBs(this)"
+                                                    onmouseout="hideDataBs(this)"
+                                                    onclick="editEvent(this);">
+                                                    ${appointment.title}
+                                                </td>
+                                                `;
                                                 reserved = true;
                                             }
                                         });
@@ -326,15 +327,15 @@
                                                 '';
                                             htmlContent += `
                                             <td id="bos" style="background-color:${renk}" data-id="${data.id}"
-    data-original-content="BOŞ"
-    data-bs="${reservation.start}"
-    data-nowDate="${new Date().toISOString().slice(0, 10)}"
-    data-option="${day.tarih}"
-    onmouseover="showDataBs(this)"
-    onmouseout="hideDataBs(this)"
-    onclick="addEvent(this);">
-    BOŞ
-</td>`;
+                                                data-original-content="BOŞ"
+                                                data-bs="${reservation.start}"
+                                                data-nowDate="${new Date().toISOString().slice(0, 10)}"
+                                                data-option="${day.tarih}"
+                                                onmouseover="showDataBs(this)"
+                                                onmouseout="hideDataBs(this)"
+                                                onclick="addEvent(this);">
+                                                BOŞ
+                                            </td>`;
                                         }
                                     });
 
@@ -462,8 +463,8 @@
                         <div class="float-right">
                             <input type="hidden" value="${data.addweek}" id='addweek'>
                             <button id="prev" class="btn btn-dark"> Önceki </button>
-                            <button id="now" class="btn btn-dark"
-                                style="background-color: #f09f22;  border:#f09f22"> Bugün </button>
+                            <button id="now" class="btn btn-dark" style="background-color: #f09f22;  border:#f09f22">
+                                Bugün </button>
 
                             <button id="next" class="btn btn-dark"> Sonraki </button>
 
@@ -527,8 +528,9 @@
             Swal.fire({
                 background: 'white',
 
-                title: "<h5 style='color:black'> Rezervasyon Tarihi: " + formattedDateTime + "</h5>"+"<h5 style='color:black'>İsim: " + userName + "</h5>"+
-                 "<h5 style='color:black'> İletişim:" + contact + "</h5>" +
+                title: "<h5 style='color:black'> Rezervasyon Tarihi: " + formattedDateTime + "</h5>" +
+                    "<h5 style='color:black'>İsim: " + userName + "</h5>" +
+                    "<h5 style='color:black'> İletişim:" + contact + "</h5>" +
                     "<h5 style='color:black'> Not:" + userinfo + "</h5>",
                 icon: "info",
 

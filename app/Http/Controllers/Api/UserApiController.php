@@ -95,14 +95,14 @@ class UserApiController extends Controller
                 'halisaha' => $allsaha,
 
             ]);
-         } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'status' => 409,
                 "İşlem Hatası "
             ], 200);
         }
 
-    }  
+    }
 
     public function halisahagetAll($id, $addweek)
     {
@@ -115,79 +115,79 @@ class UserApiController extends Controller
                 ]);
             }
 
-            
-      $halisaha = \DB::table("halisaha")->where("id", $id)->first();
-      $userId = $user->id;
-      $allsaha = \DB::table("halisaha")->where("userId", $userId)->get();
-  
-      $acilissaati = $halisaha->starthour;
-      $kapanissaati = $halisaha->endhour;
-      $macsuresi = $halisaha->macsuresi;
-      $offdays = $halisaha->offdays;
-  
-      $events = \DB::table("events")->where("sahaId", $id)->where("deleted", 0)->get();
-      $appointments = json_decode($events, true);
-  
-      // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
-      $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
-      $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
-  
-      // Rezervasyon aralığını Carbon nesnesine dönüştürme
-      $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
-  
-      // Rezervasyon sürelerini liste olarak oluşturma
-      $reservationTimes = [];
-      $currentReservationTime = $openingTime->copy();
-  
-      while ($currentReservationTime->lte($closingTime)) {
-        $reservationStart = $currentReservationTime->format('H:i:s');
-        $currentReservationTime->add($reservationInterval);
-        $reservationEnd = $currentReservationTime->format('H:i:s');
-        $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
-      }
-      $now = \Carbon\Carbon::now();
-  
-      // Şu anki tarih ve saat
-      if ($addweek > 0) {
-        for ($i = 0; $i < $addweek; $i++) {
-          $now = $now->addWeek();
-        }
-      } elseif ($addweek < 0) {
-        for ($i = 0; $i > $addweek; $i--) {
-          $now = $now->subWeek();
-        }
-      } else {
-        $addweek = 0;
-      }
-  
-      // Haftanın günlerini ve tarihlerini alalım
-      $filteredDays = [];
-      for ($i = \Carbon\Carbon::SUNDAY; $i <= \Carbon\Carbon::SATURDAY; $i++) {
-        // Haftanın günlerini ve tarihlerini alırken isimlerini de alacağız
-        $day = $now->copy()->startOfWeek()->addDays($i);
-        $filteredDays[] = [
-          'tarih' => $day->format('Y-m-d'),
-          'gun_ismi' => $day->locale('tr')->dayName,
-        ];
-      }
-  
-      // Gerekli bilgileri döndür
-      return response()->json([
-        'halisaha' => $halisaha,
-        'appointments' => $appointments,
-        'acilissaati' => $acilissaati,
-        'kapanissaati' => $kapanissaati,
-        'macsuresi' => $macsuresi,
-        'filteredDays' => $filteredDays,
-        'offdays' => $offdays,
-        'allsaha' => $allsaha,
-        'events' => $events,
-        'id' => $id,
-        'reservationTimes' => $reservationTimes,
-        'addweek' => $addweek
-      ]);
 
-       
+            $halisaha = \DB::table("halisaha")->where("id", $id)->first();
+            $userId = $user->id;
+            $allsaha = \DB::table("halisaha")->where("userId", $userId)->get();
+
+            $acilissaati = $halisaha->starthour;
+            $kapanissaati = $halisaha->endhour;
+            $macsuresi = $halisaha->macsuresi;
+            $offdays = $halisaha->offdays;
+
+            $events = \DB::table("events")->where("sahaId", $id)->where("deleted", 0)->get();
+            $appointments = json_decode($events, true);
+
+            // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
+            $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
+            $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
+
+            // Rezervasyon aralığını Carbon nesnesine dönüştürme
+            $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
+
+            // Rezervasyon sürelerini liste olarak oluşturma
+            $reservationTimes = [];
+            $currentReservationTime = $openingTime->copy();
+
+            while ($currentReservationTime->lte($closingTime)) {
+                $reservationStart = $currentReservationTime->format('H:i:s');
+                $currentReservationTime->add($reservationInterval);
+                $reservationEnd = $currentReservationTime->format('H:i:s');
+                $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
+            }
+            $now = \Carbon\Carbon::now();
+
+            // Şu anki tarih ve saat
+            if ($addweek > 0) {
+                for ($i = 0; $i < $addweek; $i++) {
+                    $now = $now->addWeek();
+                }
+            } elseif ($addweek < 0) {
+                for ($i = 0; $i > $addweek; $i--) {
+                    $now = $now->subWeek();
+                }
+            } else {
+                $addweek = 0;
+            }
+
+            // Haftanın günlerini ve tarihlerini alalım
+            $filteredDays = [];
+            for ($i = \Carbon\Carbon::SUNDAY; $i <= \Carbon\Carbon::SATURDAY; $i++) {
+                // Haftanın günlerini ve tarihlerini alırken isimlerini de alacağız
+                $day = $now->copy()->startOfWeek()->addDays($i);
+                $filteredDays[] = [
+                    'tarih' => $day->format('Y-m-d'),
+                    'gun_ismi' => $day->locale('tr')->dayName,
+                ];
+            }
+
+            // Gerekli bilgileri döndür
+            return response()->json([
+                'halisaha' => $halisaha,
+                'appointments' => $appointments,
+                'acilissaati' => $acilissaati,
+                'kapanissaati' => $kapanissaati,
+                'macsuresi' => $macsuresi,
+                'filteredDays' => $filteredDays,
+                'offdays' => $offdays,
+                'allsaha' => $allsaha,
+                'events' => $events,
+                'id' => $id,
+                'reservationTimes' => $reservationTimes,
+                'addweek' => $addweek
+            ]);
+
+
         } catch (\Throwable $th) {
 
             return response()->json([
@@ -266,42 +266,23 @@ class UserApiController extends Controller
                 }
             }
             $resultString = "[" . implode(",", $newoffdays) . "]";
-            $endhour = $request->endhour;
-
-            $endhour = $request->endhour;
-            $firstTwoCharacters = substr($endhour, 0, 2);
-            $endhour = $request->endhour;
-            $lastTwoCharacters = substr($endhour, -2);
-
-            if ($firstTwoCharacters < "06") {
-
-                $firstTwoCharacters = 24 + intval($request->endhour);
-                $firstTwoCharacters = $firstTwoCharacters . ":" . $lastTwoCharacters . ":00";
-            } else {
-                $firstTwoCharacters = $firstTwoCharacters . ":" . $lastTwoCharacters . ":00";
-
-            }
 
 
 
-            if (strlen($request->starthour) == 8) {
-                $newstart = $request->starthour;
 
-            } else {
-                $newstart = $request->starthour . ":00";
 
-            }
+            $request->starthour;
+
 
             \DB::table("halisaha")->where("id", $request->id)->update([
                 "name" => $request->name,
                 "userId" => $user->id,
-                "starthour" => $newstart,
-                "endhour" => $firstTwoCharacters,
+                "starthour" => $request->starthour,
+                "endhour" => $request->endhour,
 
-                "macsuresi" => "00:" . $request->macsuresi . ":00",
+                "macsuresi" => $request->macsuresi,
                 "offdays" => $resultString,
             ]);
-
 
 
             return response()->json([
@@ -312,7 +293,7 @@ class UserApiController extends Controller
             return response()->json([
                 'status' => 409,
                 "İşlem Hatası "
-            ], 200);
+            ], 409);
         }
     }
     public function musteriget()
@@ -326,31 +307,31 @@ class UserApiController extends Controller
                 ]);
             }
             $sahalar = \DB::table("halisaha")
-            ->where("userId",   $user->id)
-            ->pluck("id"); // saha id'lerini bir dizi olarak al
-    
-        $users = [];
-    
-        $events = \DB::table("events")
-            ->select('userinfo')
-            ->whereIn("sahaId", $sahalar)
-            ->groupBy('userinfo') // userinfo'ya göre grupla
-            ->orderByDesc('id')
-            ->get();
-    
-        foreach ($events as $event) {
-            $latestEvent = \DB::table("events")
+                ->where("userId", $user->id)
+                ->pluck("id"); // saha id'lerini bir dizi olarak al
+
+            $users = [];
+
+            $events = \DB::table("events")
+                ->select('userinfo')
                 ->whereIn("sahaId", $sahalar)
-                ->where('userinfo', $event->userinfo)
+                ->groupBy('userinfo') // userinfo'ya göre grupla
                 ->orderByDesc('id')
-                ->first();
-    
-            // Kullanıcı bilgisine göre son etkinliği al
-            if ($latestEvent) {
-                $users[] = $latestEvent;
+                ->get();
+
+            foreach ($events as $event) {
+                $latestEvent = \DB::table("events")
+                    ->whereIn("sahaId", $sahalar)
+                    ->where('userinfo', $event->userinfo)
+                    ->orderByDesc('id')
+                    ->first();
+
+                // Kullanıcı bilgisine göre son etkinliği al
+                if ($latestEvent) {
+                    $users[] = $latestEvent;
+                }
             }
-        }
-    
+
 
 
             return response()->json([
@@ -429,48 +410,50 @@ class UserApiController extends Controller
     }
     public function deleteback($id)
     {
-  
-      try {
-        $events = \DB::table("events")->where("id", $id)->update(["deleted" => 0]);
-   
-   
-   
-  
-  
-      return response()->json([
-        'status' => 200,
-        'message' => "İşlem Başarılı"
 
-    ]);
-      } catch (\Throwable $th) {
-        return response()->json([
-            'status' => 409,
-            'message' => "İşlem Başarısız"
-    
-        ]);      }
-  
-    }
+        try {
+            $events = \DB::table("events")->where("id", $id)->update(["deleted" => 0]);
 
-    public function getallhalisaha(){
-        try{
-        $user = Auth::guard('api')->user();
-        if (!$user) {
+
+
+
+
             return response()->json([
-                'status' => 401,
-                'message' => 'Unauthenticated.'
+                'status' => 200,
+                'message' => "İşlem Başarılı"
+
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 409,
+                'message' => "İşlem Başarısız"
+
             ]);
         }
-        $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
-        return response()->json([
-            'status' => 200,
-            'data' => $allsaha
-        ]);
-    } catch (\Throwable $th) {
-        return response()->json([
-            'status' => 409,
-            "İşlem Hatası "
-        ], 200);
+
     }
+
+    public function getallhalisaha()
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $allsaha
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 409,
+                "İşlem Hatası "
+            ], 200);
+        }
     }
 
 }

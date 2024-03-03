@@ -9,7 +9,7 @@ use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
  
-
+ 
 use Carbon\Carbon;
 use Netgsm\Sms\SmsSend;
 
@@ -387,6 +387,7 @@ class UserApiController extends Controller
             }
             $users = [];
             $users = \DB::table("events")
+            ->orderByDesc("id")
                 ->where("deleted", 1)
                 ->get();
             return response()->json([
@@ -418,6 +419,7 @@ class UserApiController extends Controller
 
 
             $users = \DB::table("aboneler")
+            ->orderByDesc("id")
                 ->get();
 
 
@@ -492,7 +494,9 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $allsaha = \DB::table("halisaha")->where("userId", $user->id)->get();
+            $allsaha = \DB::table("halisaha")
+            ->orderByDesc("id")
+            ->where("userId", $user->id)->get();
             return response()->json([
                 'status' => 200,
                 'data' => $allsaha

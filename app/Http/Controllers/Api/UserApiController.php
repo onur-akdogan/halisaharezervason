@@ -579,8 +579,9 @@ class UserApiController extends Controller
   
     try{
         \DB::table("events")->where('id', $request->id)->update([
-            "title" => $request->title,
-            "sahaId" => $request->sahaId,
+             "sahaId" => $request->sahaId,
+             "title" => $request->title,
+
             "userName" => $request->userName,
             "userinfo" => $request->userinfo,
             "note" => $request->note,

@@ -8,7 +8,10 @@ use App\Models\User;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+ 
+
 use Carbon\Carbon;
+use Netgsm\Sms\SmsSend;
 
 class UserApiController extends Controller
 {
@@ -479,4 +482,119 @@ class UserApiController extends Controller
         }
     }
 
+    public function add(Request $request)
+    {
+  
+    try{
+        $tarihMetni = $request->date;
+        if ($request->aboneTime > 0) {
+          for ($i = 0; $i <= $request->aboneTime; $i++) {
+    
+            // Sonucu yazdırma
+            $tarihMetni = Carbon::parse($tarihMetni);
+    
+    
+            \DB::table("events")->insert([
+              "title" => "ABONE", //$request->title,',
+              "sahaId" => $request->sahaId,
+              "date" => $tarihMetni,
+              "userName" => $request->userName,
+              "userinfo" => $request->userinfo,
+              "note" => $request->note,
+    
+    
+            ]);
+    
+            $tarihMetni = Carbon::parse($tarihMetni);
+    
+            $tarihMetni->addWeek();
+          }
+    
+    
+          \DB::table("aboneler")->insert([
+            "sahaId" => $request->sahaId,
+            "startdate" => $request->date,
+            "enddate" => $tarihMetni,
+            "userName" => $request->userName,
+            "userinfo" => $request->userinfo,
+            "note" => $request->note,
+    
+    
+          ]);
+    
+        } else {
+          $tarihMetni = Carbon::parse($tarihMetni);
+          \DB::table("events")->insert([
+            "title" => 'DOLU', //$request->title,//'Dolu,
+            "sahaId" => $request->sahaId,
+            "date" => $tarihMetni,
+            "userName" => $request->userName,
+            "userinfo" => $request->userinfo,
+            "note" => $request->note,
+    
+    
+          ]);
+        }
+        $halisaha = \DB::table("halisaha")->where("id", $request->sahaId)->first();
+        $user = \DB::table("users")->where("id", $halisaha->userId)->first();
+        if ($request->aboneTime > 0) {
+          $sms = new SmsSend;
+          $data = array(
+            'msgheader' => "8503085771",
+            'gsm' => $request->userinfo,
+            'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " aboneliğiniz ".$request->aboneTime/4 ." aylık (".$request->aboneTime." Hafta) oluşturulmuştur. Halisaha iletişim:" .$user->phone,
+            'filter' => '0',
+            'startdate' => '270120230950',
+            'stopdate' => '270120231030',
+          );
+    
+        } else {
+          $sms = new SmsSend;
+          $data = array(
+            'msgheader' => "8503085771",
+            'gsm' => $request->userinfo,
+            'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur. Halisaha iletişim:" .$user->phone,
+            'filter' => '0',
+            'startdate' => '270120230950',
+            'stopdate' => '270120231030',
+          );
+        }
+        $sonuc = $sms->smsgonder1_1($data);
+    
+        return response()->json([
+          'status' => 200,
+          'data' => "Başarılı"
+      ]);
+    }catch(e){
+        return response()->json([
+            'status' => 409,
+            'data' => "Hata"
+        ]);
+    }
+  
+    }
+    
+    public function eventedit(Request $request)
+    {
+  
+    try{
+        \DB::table("events")->where('id', $request->id)->update([
+            "title" => $request->title,
+            "sahaId" => $request->sahaId,
+            "userName" => $request->userName,
+            "userinfo" => $request->userinfo,
+            "note" => $request->note,
+          ]);
+        return response()->json([
+          'status' => 200,
+          'data' => "Başarılı"
+      ]);
+    }catch(e){
+        return response()->json([
+            'status' => 409,
+            'data' => "Hata"
+        ]);
+    }
+  
+    }
 }

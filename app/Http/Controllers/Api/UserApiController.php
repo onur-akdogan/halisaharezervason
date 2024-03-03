@@ -8,8 +8,8 @@ use App\Models\User;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
- 
- 
+
+
 use Carbon\Carbon;
 use Netgsm\Sms\SmsSend;
 
@@ -280,12 +280,12 @@ class UserApiController extends Controller
 
             return response()->json([
                 'status' => 200,
-              "message"=>  "Ekleme Başarılı"
+                "message" => "Ekleme Başarılı"
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 409,
-                "message"=>   "İşlem Hatası "
+                "message" => "İşlem Hatası "
             ], 409);
         }
     }
@@ -387,7 +387,7 @@ class UserApiController extends Controller
             }
             $users = [];
             $users = \DB::table("events")
-            ->orderByDesc("id")
+                ->orderByDesc("id")
                 ->where("deleted", 1)
                 ->get();
             return response()->json([
@@ -419,7 +419,7 @@ class UserApiController extends Controller
 
 
             $users = \DB::table("aboneler")
-            ->orderByDesc("id")
+                ->orderByDesc("id")
                 ->get();
 
 
@@ -466,8 +466,22 @@ class UserApiController extends Controller
         try {
             $events = \DB::table("events")->where("id", $id)->update(["deleted" => 1]);
 
+            $eventsget = \DB::table("events")->where("id", $id)->first();
+            $halisaha = \DB::table("halisaha")->where("id", $eventsget->sahaId)->first();
+            $username = \DB::table("users")->where("id", $halisaha->userId)->first();
+            $tarihMetni = $eventsget->date;
 
-
+            // Sonucu yazdırma
+            $tarihMetni = Carbon::parse($tarihMetni);
+            $sms = new SmsSend; 
+            $data = array(
+                'msgheader' => "8503085771",
+                'gsm' => $eventsget->userinfo,
+                'message' => "Sayın " . $eventsget->userName . ' ' . $username->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon iptal edilmiştir. Halisaha iletişim:" . $username->phone,
+                'filter' => '0',
+                'startdate' => '270120230950',
+                'stopdate' => '270120231030',
+            );
 
 
             return response()->json([
@@ -495,8 +509,8 @@ class UserApiController extends Controller
                 ]);
             }
             $allsaha = \DB::table("halisaha")
-            ->orderByDesc("id")
-            ->where("userId", $user->id)->get();
+                ->orderByDesc("id")
+                ->where("userId", $user->id)->get();
             return response()->json([
                 'status' => 200,
                 'data' => $allsaha
@@ -511,118 +525,118 @@ class UserApiController extends Controller
 
     public function eventadd(Request $request)
     {
-  
-    try{
-        $tarihMetni = $request->date;
-        if ($request->aboneTime > 0) {
-          for ($i = 0; $i <= $request->aboneTime; $i++) {
-    
-            // Sonucu yazdırma
-            $tarihMetni = Carbon::parse($tarihMetni);
-    
-    
-            \DB::table("events")->insert([
-              "title" => "ABONE", //$request->title,',
-              "sahaId" => $request->sahaId,
-              "date" => $tarihMetni,
-              "userName" => $request->userName,
-              "userinfo" => $request->userinfo,
-              "note" => $request->note,
-    
-    
+
+        try {
+            $tarihMetni = $request->date;
+            if ($request->aboneTime > 0) {
+                for ($i = 0; $i <= $request->aboneTime; $i++) {
+
+                    // Sonucu yazdırma
+                    $tarihMetni = Carbon::parse($tarihMetni);
+
+
+                    \DB::table("events")->insert([
+                        "title" => "ABONE", //$request->title,',
+                        "sahaId" => $request->sahaId,
+                        "date" => $tarihMetni,
+                        "userName" => $request->userName,
+                        "userinfo" => $request->userinfo,
+                        "note" => $request->note,
+
+
+                    ]);
+
+                    $tarihMetni = Carbon::parse($tarihMetni);
+
+                    $tarihMetni->addWeek();
+                }
+
+
+                \DB::table("aboneler")->insert([
+                    "sahaId" => $request->sahaId,
+                    "startdate" => $request->date,
+                    "enddate" => $tarihMetni,
+                    "userName" => $request->userName,
+                    "userinfo" => $request->userinfo,
+                    "note" => $request->note,
+
+
+                ]);
+
+            } else {
+                $tarihMetni = Carbon::parse($tarihMetni);
+                \DB::table("events")->insert([
+                    "title" => 'DOLU', //$request->title,//'Dolu,
+                    "sahaId" => $request->sahaId,
+                    "date" => $tarihMetni,
+                    "userName" => $request->userName,
+                    "userinfo" => $request->userinfo,
+                    "note" => $request->note,
+
+
+                ]);
+            }
+            $halisaha = \DB::table("halisaha")->where("id", $request->sahaId)->first();
+            $user = \DB::table("users")->where("id", $halisaha->userId)->first();
+            if ($request->aboneTime > 0) {
+                $sms = new SmsSend;
+                $data = array(
+                    'msgheader' => "8503085771",
+                    'gsm' => $request->userinfo,
+                    'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " aboneliğiniz " . $request->aboneTime / 4 . " aylık (" . $request->aboneTime . " Hafta) oluşturulmuştur. Halisaha iletişim:" . $user->phone,
+                    'filter' => '0',
+                    'startdate' => '270120230950',
+                    'stopdate' => '270120231030',
+                );
+
+            } else {
+                $sms = new SmsSend;
+                $data = array(
+                    'msgheader' => "8503085771",
+                    'gsm' => $request->userinfo,
+                    'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur. Halisaha iletişim:" . $user->phone,
+                    'filter' => '0',
+                    'startdate' => '270120230950',
+                    'stopdate' => '270120231030',
+                );
+            }
+            $sonuc = $sms->smsgonder1_1($data);
+
+            return response()->json([
+                'status' => 200,
+                'data' => "Başarılı"
             ]);
-    
-            $tarihMetni = Carbon::parse($tarihMetni);
-    
-            $tarihMetni->addWeek();
-          }
-    
-    
-          \DB::table("aboneler")->insert([
-            "sahaId" => $request->sahaId,
-            "startdate" => $request->date,
-            "enddate" => $tarihMetni,
-            "userName" => $request->userName,
-            "userinfo" => $request->userinfo,
-            "note" => $request->note,
-    
-    
-          ]);
-    
-        } else {
-          $tarihMetni = Carbon::parse($tarihMetni);
-          \DB::table("events")->insert([
-            "title" => 'DOLU', //$request->title,//'Dolu,
-            "sahaId" => $request->sahaId,
-            "date" => $tarihMetni,
-            "userName" => $request->userName,
-            "userinfo" => $request->userinfo,
-            "note" => $request->note,
-    
-    
-          ]);
+        } catch (e) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
         }
-        $halisaha = \DB::table("halisaha")->where("id", $request->sahaId)->first();
-        $user = \DB::table("users")->where("id", $halisaha->userId)->first();
-        if ($request->aboneTime > 0) {
-          $sms = new SmsSend;
-          $data = array(
-            'msgheader' => "8503085771",
-            'gsm' => $request->userinfo,
-            'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " aboneliğiniz ".$request->aboneTime/4 ." aylık (".$request->aboneTime." Hafta) oluşturulmuştur. Halisaha iletişim:" .$user->phone,
-            'filter' => '0',
-            'startdate' => '270120230950',
-            'stopdate' => '270120231030',
-          );
-    
-        } else {
-          $sms = new SmsSend;
-          $data = array(
-            'msgheader' => "8503085771",
-            'gsm' => $request->userinfo,
-            'message' => "Sayın " . $request->userName . ' ' . $user->name . ' isimli halısaha tarafından' . " maçınız " . '' . $tarihMetni . " tarihi için rezervasyon oluşturulmuştur. Halisaha iletişim:" .$user->phone,
-            'filter' => '0',
-            'startdate' => '270120230950',
-            'stopdate' => '270120231030',
-          );
-        }
-        $sonuc = $sms->smsgonder1_1($data);
-    
-        return response()->json([
-          'status' => 200,
-          'data' => "Başarılı"
-      ]);
-    }catch(e){
-        return response()->json([
-            'status' => 409,
-            'data' => "Hata"
-        ]);
+
     }
-  
-    }
-    
+
     public function eventedit(Request $request)
     {
-  
-    try{
-        \DB::table("events")->where('id', $request->id)->update([
-             "sahaId" => $request->sahaId,
-             "title" => $request->title,
 
-            "userName" => $request->userName,
-            "userinfo" => $request->userinfo,
-            "note" => $request->note,
-          ]);
-        return response()->json([
-          'status' => 200,
-          'data' => "Başarılı"
-      ]);
-    }catch(e){
-        return response()->json([
-            'status' => 409,
-            'data' => "Hata"
-        ]);
-    }
-  
+        try {
+            \DB::table("events")->where('id', $request->id)->update([
+                "sahaId" => $request->sahaId,
+                "title" => $request->title,
+
+                "userName" => $request->userName,
+                "userinfo" => $request->userinfo,
+                "note" => $request->note,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'data' => "Başarılı"
+            ]);
+        } catch (e) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
+        }
+
     }
 }

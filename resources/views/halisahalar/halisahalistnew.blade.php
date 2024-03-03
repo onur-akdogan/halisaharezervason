@@ -442,7 +442,7 @@
         <div class="p-3 text-gray-900 dark:text-gray-100 backgrounds">
             <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-10">
+                    <div class="col-lg-9">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 
                             @foreach ($halisaha as $key => $item)
@@ -459,7 +459,7 @@
 
                         </ul>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <div class="float-right">
                             <input type="hidden" value="${data.addweek}" id='addweek'>
                             <button id="prev" class="btn btn-dark"> Önceki </button>

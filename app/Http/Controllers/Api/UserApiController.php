@@ -482,7 +482,7 @@ class UserApiController extends Controller
                 'startdate' => '270120230950',
                 'stopdate' => '270120231030',
             );
-
+  $sonuc = $sms->smsgonder1_1($data);
 
             return response()->json([
                 'status' => 200,

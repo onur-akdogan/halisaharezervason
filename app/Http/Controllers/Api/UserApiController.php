@@ -482,7 +482,7 @@ class UserApiController extends Controller
         }
     }
 
-    public function add(Request $request)
+    public function eventadd(Request $request)
     {
   
     try{

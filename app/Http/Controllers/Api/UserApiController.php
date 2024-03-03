@@ -458,7 +458,30 @@ class UserApiController extends Controller
         }
 
     }
+    public function eventdelete($id)
+    {
 
+        try {
+            $events = \DB::table("events")->where("id", $id)->update(["deleted" => 1]);
+
+
+
+
+
+            return response()->json([
+                'status' => 200,
+                'message' => "İşlem Başarılı"
+
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 409,
+                'message' => "İşlem Başarısız"
+
+            ]);
+        }
+
+    }
     public function getallhalisaha()
     {
         try {

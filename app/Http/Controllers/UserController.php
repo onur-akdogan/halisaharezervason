@@ -22,11 +22,17 @@ class UserController extends Controller
         return view('users.users', compact('users'));
     }
     public function aktivasyonadd($id){
-        $users=\DB::table("users")->where("id",$id)->first();
-        $date = Carbon::createFromFormat('yyyy/MM/dd',   $users->active)->format('yyyy/MM/dd');
- 
-        $user=\DB::table("users")->where("id",$id)->update([
-            "active"=>$date->addDays(365),
+        $users = \DB::table("users")->where("id", $id)->first();
+
+        // Kullanıcının "active" alanından tarih bilgisini alıp uygun formata dönüştürüyoruz
+        $date = Carbon::createFromFormat('Y/m/d', $users->active)->format('Y/m/d');
+        
+        // Tarih bilgisini 365 gün artırarak güncelliyoruz
+        $newDate = Carbon::createFromFormat('Y/m/d', $date)->addDays(365)->format('Y/m/d');
+        
+        // Kullanıcının bilgilerini güncelliyoruz
+        $user = \DB::table("users")->where("id", $id)->update([
+            "active" => $newDate,
         ]);
          return redirect()->back();
     }

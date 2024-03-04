@@ -664,7 +664,7 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            \DB::table("user")->where('id', $user->id)->update([
+            \DB::table("users")->where('id', $user->id)->update([
                 "email" => $request->email,
                 "name" => $request->name,
              
@@ -692,7 +692,7 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            \DB::table("user")->where('id', $user->id)->update([
+            \DB::table("users")->where('id', $user->id)->update([
                 "password" => Hash::make($request->password),
             ]);
             return response()->json([

@@ -639,4 +639,98 @@ class UserApiController extends Controller
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function profileupdate(Request $request)
+    {
+
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+            \DB::table("user")->where('id', $user->id)->update([
+                "email" => $request->email,
+                "name" => $request->name,
+             
+            ]);
+            return response()->json([
+                'status' => 200,
+                'data' => "Başarılı"
+            ]);
+        } catch (e) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
+        }
+
+    }
+
+    public function passwordupdate(Request $request)
+    {
+        try { 
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+            \DB::table("user")->where('id', $user->id)->update([
+                "password" => Hash::make($request->password),
+            ]);
+            return response()->json([
+                'status' => 200,
+                'data' => "Başarılı"
+            ]);
+        } catch (e) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
+        }
+
+    }
+    public function deleteaccound(Request $request)
+    {
+        try { 
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+            $user->delete(); 
+            return response()->json([
+                'status' => 200,
+                'data' => "Başarılı"
+            ]);
+        } catch (e) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
+        }
+
+    }
+
+
+
 }

@@ -22,8 +22,9 @@ class UserController extends Controller
         return view('users.users', compact('users'));
     }
     public function aktivasyonadd($id){
+        $users=\DB::table("users")->where("id",$id)->first();
         $user=\DB::table("users")->where("id",$id)->update([
-            "active"=>Carbon::now()->addDays(365),
+            "active"=>$users->active->addDays(365),
         ]);
          return redirect()->back();
     }

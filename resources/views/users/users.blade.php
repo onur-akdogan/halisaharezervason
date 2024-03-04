@@ -35,9 +35,12 @@
                                 <th scope="col">Telefon Numarası</th>
 
                                 <th scope="col">Katılma Tarihi</th>
+                                <th scope="col">Aktivasyon Bitiş Tarihi</th>
+ 
+                                <th scope="col">Aktivasyon Uzat </th>
                               </tr>
                             </thead>
-                            <tbody>
+                            <tbody> 
                                 @foreach ($users as $item)
                               <tr>
                          
@@ -46,6 +49,11 @@
                                 <td>  {{$item->phone}}</td>
 
                                 <td> {{$item->created_at}}</td>
+                                <td> {{$item->active}}</td>
+
+                                <td> <a class="btn btn-success" href="{{route('aktivasyonadd',$item->id)}}">Aktivasyon Uzat</a></td>
+
+                               
                               </tr>
                            
                     @endforeach

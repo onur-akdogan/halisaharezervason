@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\View\View;
 use PHPUnit\Framework\Constraint\IsEmpty;
-
+use Carbon\Carbon;
 class UserController extends Controller
 {
     public function index(): View
@@ -20,6 +20,12 @@ class UserController extends Controller
         $users = User::orderByDesc("created_at")->get();
 
         return view('users.users', compact('users'));
+    }
+    public function aktivasyonadd($id){
+        $user=\DB::table("users")->where("id",$id)->update([
+            "active"=>Carbon::now()->addDays(365),
+        ]);
+         return redirect()->back();
     }
     public function musteriler()
     {

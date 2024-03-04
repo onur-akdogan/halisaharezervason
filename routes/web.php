@@ -54,7 +54,7 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('/halisahaindex', [HalisahaController::class, 'index'])->name('halisaha.index');
     Route::get('/allindex', [HalisahaController::class, 'allindex'])->name('halisaha.allindex');
 
-    
+    Route::get("/aktivasyonadd/{id}",[UserController::class,"aktivasyonadd"])->name("aktivasyonadd");
     Route::get('/halisahaaddpage', [HalisahaController::class, 'addpage'])->name('halisaha.addpage');
     Route::post('/halisahaadd', [HalisahaController::class, 'add'])->name('halisaha.add');
     Route::get('/halisahadelete/{id}', [HalisahaController::class, 'delete'])->name('halisaha.delete');

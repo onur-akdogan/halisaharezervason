@@ -25,10 +25,10 @@ class UserController extends Controller
         $users = \DB::table("users")->where("id", $id)->first();
 
         // Kullanıcının "active" alanından tarih bilgisini alıp uygun formata dönüştürüyoruz
-        $date = Carbon::createFromFormat('Y/m/d', $users->active)->format('Y/m/d');
+        $date = Carbon::createFromFormat('Y/m/d', $users->active);
         
         // Tarih bilgisini 365 gün artırarak güncelliyoruz
-        $newDate = Carbon::createFromFormat('Y/m/d', $date)->addDays(365)->format('Y/m/d');
+        $newDate = $date->addDays(365)->format('Y/m/d');
         
         // Kullanıcının bilgilerini güncelliyoruz
         $user = \DB::table("users")->where("id", $id)->update([

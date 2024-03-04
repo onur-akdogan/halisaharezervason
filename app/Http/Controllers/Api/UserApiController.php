@@ -34,6 +34,10 @@ class UserApiController extends Controller
             $user->password = Hash::make($request->password);
             $user->phone = $request->phone;
             $user->api_token = Str::random(60);
+            $user->active = Carbon::now()->addDays(90);
+
+ 
+            
             $user->save();
 
             // Return response with user data
@@ -42,7 +46,8 @@ class UserApiController extends Controller
                 'api_token' => $user->api_token,
                 'username' => $user->name,
                 'email' => $user->email,
-                'id' => $user->id
+                'id' => $user->id,
+                'active'=>$user->active,
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -65,7 +70,8 @@ class UserApiController extends Controller
                     'api_token' => $user->api_token,
                     'username' => $user->name,
                     'email' => $user->email,
-                    'id' => $user->id
+                    'id' => $user->id,
+                    'active'=>$user->active,
                 ]);
             }
 

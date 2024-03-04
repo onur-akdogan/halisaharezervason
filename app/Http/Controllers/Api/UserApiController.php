@@ -667,7 +667,7 @@ class UserApiController extends Controller
             \DB::table("users")->where('id', $user->id)->update([
                 "email" => $request->email,
                 "name" => $request->name,
-             
+
             ]);
             return response()->json([
                 'status' => 200,
@@ -707,7 +707,7 @@ class UserApiController extends Controller
         }
 
     }
-    public function deleteaccound(Request $request)
+    public function deleteaccound()
     {
         try { 
             $user = Auth::guard('api')->user();

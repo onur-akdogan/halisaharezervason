@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
 
     Route::post('/profileupdate', [UserApiController::class, 'profileupdate']);
     Route::post('/passwordupdate', [UserApiController::class, 'passwordupdate']);
-    Route::post('/deleteaccound', [UserApiController::class, 'deleteaccound']);
+    Route::get('/deleteaccound', [UserApiController::class, 'deleteaccound']);
 
 
 

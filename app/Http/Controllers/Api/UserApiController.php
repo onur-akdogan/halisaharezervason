@@ -36,8 +36,8 @@ class UserApiController extends Controller
             $user->api_token = Str::random(60);
             $user->active = Carbon::now()->addDays(90);
 
- 
-            
+
+
             $user->save();
 
             // Return response with user data
@@ -47,7 +47,7 @@ class UserApiController extends Controller
                 'username' => $user->name,
                 'email' => $user->email,
                 'id' => $user->id,
-                'active'=>$user->active,
+                'active' => $user->active,
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -71,7 +71,7 @@ class UserApiController extends Controller
                     'username' => $user->name,
                     'email' => $user->email,
                     'id' => $user->id,
-                    'active'=>$user->active,
+                    'active' => $user->active,
                 ]);
             }
 
@@ -392,8 +392,10 @@ class UserApiController extends Controller
                 ]);
             }
             $users = [];
-            $users = \DB::table("events")
+            $halisaha = \DB::table("halisaha")->where("id", $user->sahaId)->first();
+             $users = \DB::table("events")
                 ->orderByDesc("id")
+                ->where("sahaId", $halisaha->id)
                 ->where("deleted", 1)
                 ->get();
             return response()->json([
@@ -422,9 +424,10 @@ class UserApiController extends Controller
             $users = [];
 
 
-
-
+            $halisaha = \DB::table("halisaha")->where("id", $user->sahaId)->first();
+ 
             $users = \DB::table("aboneler")
+            ->where("sahaId", $halisaha->id)
                 ->orderByDesc("id")
                 ->get();
 
@@ -479,7 +482,7 @@ class UserApiController extends Controller
 
             // Sonucu yazdırma
             $tarihMetni = Carbon::parse($tarihMetni);
-            $sms = new SmsSend; 
+            $sms = new SmsSend;
             $data = array(
                 'msgheader' => "8503085771",
                 'gsm' => $eventsget->userinfo,
@@ -488,7 +491,7 @@ class UserApiController extends Controller
                 'startdate' => '270120230950',
                 'stopdate' => '270120231030',
             );
-  $sonuc = $sms->smsgonder1_1($data);
+            $sonuc = $sms->smsgonder1_1($data);
 
             return response()->json([
                 'status' => 200,
@@ -690,7 +693,7 @@ class UserApiController extends Controller
 
     public function passwordupdate(Request $request)
     {
-        try { 
+        try {
             $user = Auth::guard('api')->user();
             if (!$user) {
                 return response()->json([
@@ -715,7 +718,7 @@ class UserApiController extends Controller
     }
     public function deleteaccound()
     {
-        try { 
+        try {
             $user = Auth::guard('api')->user();
             if (!$user) {
                 return response()->json([
@@ -723,7 +726,7 @@ class UserApiController extends Controller
                     'message' => 'Unauthenticated.'
                 ]);
             }
-            $user->delete(); 
+            $user->delete();
             return response()->json([
                 'status' => 200,
                 'data' => "Başarılı"

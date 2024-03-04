@@ -36,13 +36,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
     Route::get('/deleteback/{id}', [UserApiController::class, 'deleteback'])->name('calender.deleteback');
     Route::get('/eventdelete/{id}', [UserApiController::class, 'eventdelete'])->name('calender.eventdelete');
     
-    
+     
 
     Route::post('/profileupdate', [UserApiController::class, 'profileupdate']);
     Route::post('/passwordupdate', [UserApiController::class, 'passwordupdate']);
     Route::get('/deleteaccound', [UserApiController::class, 'deleteaccound']);
 
-
+    Route::get('/getbanks', [UserApiController::class, 'getbanks']);
+    
 
 });
 

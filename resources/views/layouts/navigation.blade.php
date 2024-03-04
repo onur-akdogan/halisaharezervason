@@ -69,6 +69,10 @@
                             Kullanıcılar
 
                         </x-nav-link>
+                        <x-nav-link class="text-decoration-none customcolor" :href="route('admin.banks')" :active="request()->routeIs('admin.banks')">
+                            Bankalar
+
+                        </x-nav-link>
                     @endif
 
                     <x-nav-link class="text-decoration-none customcolor" :href="route('user.musteriler')" :active="request()->routeIs('user.musteriler')">
@@ -180,6 +184,10 @@
 
                                     Kullanıcılar
                                     </x-nav-link>
+                                    <x-responsive-nav-link :href="route('admin.banks')">
+
+                                        Bankalar 
+                                        </x-nav-link>        
                             @endif
 
 

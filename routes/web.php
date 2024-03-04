@@ -62,6 +62,16 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('/halisahaupdate', [HalisahaController::class, 'update'])->name('halisaha.update');
 
     Route::get('/admin/users', [UserController::class, 'users'])->name('admin.users');
+    Route::get('/admin/banks', [UserController::class, 'banks'])->name('admin.banks');
+    Route::get('/admin/banksaddpage', [UserController::class, 'banksaddpage'])->name('admin.banksaddpage');
+    Route::get('/admin/banksdelete/{id}', [UserController::class, 'banksdelete'])->name('admin.banksdelete');
+
+    Route::post('/admin/banksadd', [UserController::class, 'banksadd'])->name('admin.banksadd');
+
+    
+
+    
+    
     Route::get('/user/musteriler', [UserController::class, 'musteriler'])->name('user.musteriler');
     Route::get('/user/musterileriptal', [UserController::class, 'musterileriptal'])->name('user.musterileriptal');
     Route::get('/user/aboneler', [UserController::class, 'aboneler'])->name('user.aboneler');

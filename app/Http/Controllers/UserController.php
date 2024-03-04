@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\View\View;
 use PHPUnit\Framework\Constraint\IsEmpty;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index(): View
@@ -13,6 +14,28 @@ class UserController extends Controller
         $users = User::paginate();
 
         return view('users.index', compact('users'));
+    } 
+    public function banks(){
+        $banks = \DB::table("payment")->orderByDesc("id")->get();
+        return view('users.banks', compact('banks'));
+    }
+    public function banksaddpage(){
+               return view('users.banksadd');
+              
+        }
+        public function banksdelete($id){
+            \DB::table("payment")->where("id",$id)->delete();
+            return redirect()->route("admin.banks");
+           
+     }
+        
+    public function banksadd(Request $request){ 
+    \DB::table("payment")->insert([
+            "bankname"=>$request->bankname,
+            "username"=>$request->username,
+            "iban"=>$request->iban
+        ]);
+       return redirect()->route("admin.banks");
     }
 
     public function users()

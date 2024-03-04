@@ -15,7 +15,14 @@ use Netgsm\Sms\SmsSend;
 
 class UserApiController extends Controller
 {
+public function getbanks(){
+    $banks = \DB::table("payment")->orderByDesc("id")->get();
 
+    return response()->json([
+        'status' => 200,
+        'data' => $banks
+    ], 200);
+}
     public function register(Request $request)
     {
         try {

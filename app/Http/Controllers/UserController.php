@@ -23,8 +23,10 @@ class UserController extends Controller
     }
     public function aktivasyonadd($id){
         $users=\DB::table("users")->where("id",$id)->first();
+        $date = Carbon::createFromFormat('yyyy/MM/dd',   $users->active)->format('yyyy/MM/dd');
+ 
         $user=\DB::table("users")->where("id",$id)->update([
-            "active"=>$users->active->addDays(365),
+            "active"=>$date->addDays(365),
         ]);
          return redirect()->back();
     }

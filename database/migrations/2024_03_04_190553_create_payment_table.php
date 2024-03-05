@@ -16,6 +16,8 @@ return new class extends Migration
             $table->text("bankname");
             $table->text("username");
             $table->text("iban");
+            $table->text("iletisim");
+
             $table->timestamps();
         });
     }

@@ -42,6 +42,8 @@
                                 <th scope="col">Banka Adı</th>
                                 <th scope="col">Kullanıcı Adı</th>
                                 <th scope="col">Iban</th>
+                                <th scope="col">İletişim Numarası</th>
+
                                  <th scope="col">Sil</th>
 
                              
@@ -55,6 +57,7 @@
                                 <td>         {{$item->bankname}}</td>
                                 <td>  {{$item->username}}</td>
                                 <td>  {{$item->iban}}</td>
+                                <td>  {{$item->iletisim}}</td>
 
                                  <td>   <a class="btn btn-danger" href="{{route("admin.banksdelete",$item->id)}}">Sil</a></td>
                             

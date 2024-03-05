@@ -33,7 +33,10 @@ class UserController extends Controller
     \DB::table("payment")->insert([
             "bankname"=>$request->bankname,
             "username"=>$request->username,
-            "iban"=>$request->iban
+            "iban"=>$request->iban,
+            "iletisim"=>$request->iletisim,
+ 
+            
         ]);
        return redirect()->route("admin.banks");
     }

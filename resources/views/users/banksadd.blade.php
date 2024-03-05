@@ -50,7 +50,14 @@
                                         placeholder="IBAN Numarası"  >
                                 </div>
                             </div>
- 
+                            <div class="form-group row pt-2">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">İletişim Bilgisi</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="iletisim" class="form-control" id="inputEmail3"
+                                        placeholder="İletişim Numarası"  >
+                                </div>
+                            </div>
+                            
                             <div class="col-lg-12" style="height: 200px"></div>
                             <div class="form-group row pt-5">
                                 <div class="col-sm-11">

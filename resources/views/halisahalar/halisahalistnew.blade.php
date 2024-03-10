@@ -209,6 +209,7 @@
     </script>
     <script>
         sahaninidsi = 0;
+       
         try {
             document.addEventListener('DOMContentLoaded', function() {
                 const dataContainer = document.getElementById('pills-tabContent');
@@ -227,6 +228,10 @@
                         })
                         .then(response => response.json())
                         .then(data => {
+                            allbox = 0;
+                         allbox=(
+                                    data.filteredDays.length)*data.reservationTimes.length;
+
                             loader.style.display = 'none'; // Yükleme göstergesini gizle
 
                             htmlContent = ''; // HTML içeriğini sıfırla
@@ -234,6 +239,7 @@
                             htmlContent += `<div class="tab-content" id="pills-tabContent"`;
 
                             data.allsaha.forEach(saha => {
+                                let index = 0;
                                 htmlContent += `
                            
                             <div class="tab-pane fade" id="pills-${saha.id}" role="tabpanel"
@@ -247,6 +253,7 @@
                                                 <th id="clock-macsuresi">Saat  </th>`;
 
                                 data.filteredDays.forEach(day => {
+                                
                                     const bugun = new Date().toISOString().slice(0, 10);
                                     const tarih = day.tarih;
                                     const renk = tarih === bugun ? '#f09f22' : '';
@@ -284,19 +291,20 @@
                                         let reserved = false;
 
                                         data.appointments.forEach(appointment => {
-                                            const appointmentDate = new Date(
-                                                appointment.date);
-                                            const appointmentHour =
-                                                appointmentDate.getHours();
-                                            const appointmentMinute =
-                                                appointmentDate.getMinutes();
+                                     
 
-                                            if (appointmentDate.toISOString()
-                                                .slice(0, 10) === day.tarih &&
-                                                appointmentHour ===
-                                                reservationStartHour &&
-                                                appointmentMinute ===
-                                                reservationStartMinute) {
+
+
+                                           
+                                         
+                                             
+                                               
+                                       if (appointment.date=== day.tarih+" "+startTimeString+":00") {
+                                                console.log(appointment.date);
+                                                  console.log("*********");
+                                                  console.log(day.tarih+" "+startTimeString+":00");
+                                                index++;
+                                    
                                                 htmlContent += `
                                                 <td id="${appointment.title === 'DOLU' ? 'dolu' : 'abone'}"
                                                     data-name="${appointment.userName}"
@@ -320,7 +328,9 @@
                                         });
 
                                         if (!reserved) {
-                                            const bugun = new Date().toISOString()
+                                            
+                                            index++;
+                                             const bugun = new Date().toISOString()
                                                 .slice(0, 10);
                                             const tarih = day.tarih;
                                             const renk = tarih === bugun ? '#f0ba65' :
@@ -337,6 +347,7 @@
                                                 BOŞ
                                             </td>`;
                                         }
+
                                     });
 
                                     htmlContent += `</tr>`;
@@ -576,7 +587,7 @@
                         showDenyButton: true,
                         html: `
                            <div class="row">
-                           
+
                                 <label>Ulaşılacak Kişinin İsmi</label>
 
                                <input type="text" name="userName" class="swal2-input" placeholder="İrtibat İsmi" value=` +
@@ -692,6 +703,9 @@
                     background: 'white',
                     title: "<h3 style='color:black'> " +
                         "Bu saat aralığına eklemek istediğinize emin misiniz?" +
+                        "<h5 style='color:black'> Seçilen Tarih: " + formattedDateTime + "</h5>"
+
+                        +
                         "</h3>",
                     input: "select",
                     inputOptions: {

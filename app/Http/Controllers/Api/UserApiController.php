@@ -751,7 +751,7 @@ class UserApiController extends Controller
 
     public function downloadImages($halisaha)
     {
-        try {
+        try { 
             $user = Auth::guard('api')->user();
             if (!$user) {
                 return response()->json([

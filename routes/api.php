@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'user'], function () {
     Route::get('/deleteaccound', [UserApiController::class, 'deleteaccound']);
 
     Route::get('/getbanks', [UserApiController::class, 'getbanks']);
-    Route::get('/downloadImages/{id}', [UserApiController::class, 'getbanks']);
+    Route::get('/downloadImages/{id}', [UserApiController::class, 'downloadImages']);
    
 
 });

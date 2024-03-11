@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfileController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/downloadImages/{halisaha}', [CalenderController::class,'downloadImages'])->name('download.images');
 
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
@@ -67,7 +68,6 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('/admin/banksdelete/{id}', [UserController::class, 'banksdelete'])->name('admin.banksdelete');
 
     Route::post('/admin/banksadd', [UserController::class, 'banksadd'])->name('admin.banksadd');
-    Route::get('/downloadImages/{halisaha}', [CalenderController::class,'downloadImages'])->name('download.images');
 
 
     

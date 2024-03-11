@@ -15,14 +15,15 @@ use Netgsm\Sms\SmsSend;
 
 class UserApiController extends Controller
 {
-public function getbanks(){
-    $banks = \DB::table("payment")->orderByDesc("id")->get();
+    public function getbanks()
+    {
+        $banks = \DB::table("payment")->orderByDesc("id")->get();
 
-    return response()->json([
-        'status' => 200,
-        'data' => $banks
-    ], 200);
-}
+        return response()->json([
+            'status' => 200,
+            'data' => $banks
+        ], 200);
+    }
     public function register(Request $request)
     {
         try {
@@ -400,7 +401,7 @@ public function getbanks(){
             }
             $users = [];
             $halisaha = \DB::table("halisaha")->where("id", $user->sahaId)->first();
-             $users = \DB::table("events")
+            $users = \DB::table("events")
                 ->orderByDesc("id")
                 ->where("sahaId", $halisaha->id)
                 ->where("deleted", 1)
@@ -432,9 +433,9 @@ public function getbanks(){
 
 
             $halisaha = \DB::table("halisaha")->where("id", $user->sahaId)->first();
- 
+
             $users = \DB::table("aboneler")
-            ->where("sahaId", $halisaha->id)
+                ->where("sahaId", $halisaha->id)
                 ->orderByDesc("id")
                 ->get();
 
@@ -745,6 +746,199 @@ public function getbanks(){
             ]);
         }
 
+    }
+  
+
+    public function downloadImages($halisaha)
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Unauthenticated.'
+                ]);
+            }
+            $tableImage = InterventionImage::make(public_path('halisaha.jpg'));
+
+            $today = Carbon::now()->startOfDay();
+            $tomorrow = Carbon::tomorrow()->startOfDay();
+
+            $halisaha = \DB::table("halisaha")->where("id", $halisaha)->first();
+
+            $acilissaati = $halisaha->starthour;
+            $kapanissaati = $halisaha->endhour;
+            $macsuresi = $halisaha->macsuresi;
+            $offdays = $halisaha->offdays;
+
+            $events = \DB::table("events")
+                ->where("deleted", 0)
+                ->whereDate("date", ">=", $today)
+                ->whereDate("date", "<=", $tomorrow)
+                ->get();
+            // Açılış ve kapanış saatlerini Carbon nesnelerine dönüştürme
+            $openingTime = \Carbon\Carbon::createFromFormat('H:i:s', $acilissaati);
+            $closingTime = \Carbon\Carbon::createFromFormat('H:i:s', $kapanissaati);
+
+            // Rezervasyon aralığını Carbon nesnesine dönüştürme
+            $reservationInterval = \Carbon\CarbonInterval::createFromFormat('H:i:s', $macsuresi);
+
+            // Rezervasyon sürelerini liste olarak oluşturma
+            $reservationTimes = [];
+            $currentReservationTime = $openingTime->copy();
+
+            while ($currentReservationTime->lte($closingTime)) {
+                $reservationStart = $currentReservationTime->format('H:i:s');
+                $currentReservationTime->add($reservationInterval);
+                $reservationEnd = $currentReservationTime->format('H:i:s');
+                $reservationTimes[] = ["start" => $reservationStart, "end" => $reservationEnd];
+            }
+
+            $now = \Carbon\Carbon::now();
+            $addweek = 0;
+
+            // Haftanın günlerini ve tarihlerini alalım
+            $filteredDays = [];
+
+            // Bugünün tarihini al
+            $bugun = \Carbon\Carbon::now()->format('Y-m-d');
+            $yarın = \Carbon\Carbon::tomorrow()->format('Y-m-d');
+
+            // Bugün ve yarını filtrelenmiş günler dizisine ekle
+            $filteredDays[] = [
+                'tarih' => $bugun,
+                'gun_ismi' => \Carbon\Carbon::now()->locale('tr')->dayName,
+            ];
+            $filteredDays[] = [
+                'tarih' => $yarın,
+                'gun_ismi' => \Carbon\Carbon::tomorrow()->locale('tr')->dayName,
+            ];
+
+            $datesdolu = [];
+            $datesbos = [];
+
+
+            foreach ($reservationTimes as $reservation) {
+                $reservationStartHour = (int) explode(':', $reservation["start"])[0];
+                $reservationStartMinute = (int) explode(':', $reservation['start'])[1];
+
+                // Saat ve dakikayı iki haneli olarak biçimlendirme
+                $reservationStartHourFormatted = sprintf("%02d", $reservationStartHour);
+                $reservationStartMinuteFormatted = sprintf("%02d", $reservationStartMinute);
+
+                foreach ($filteredDays as $day) {
+                    $reserved = false;
+
+                    foreach ($events as $event) {
+                        // Tarih ve saatleri karşılaştırırken, dakika kısmını da ekleyin
+                        if ($event->date == $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00") {
+                            $datesdolu[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
+                            $reserved = true;
+                        }
+                    }
+
+
+                    $datesbos[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
+
+                }
+            }
+            // Boş tarihlerden dolu tarihlerle eşleşenleri çıkar
+            $filteredDatesBos = array_filter($datesbos, function ($dateBos) use ($datesdolu) {
+                return !in_array($dateBos, $datesdolu);
+            });
+
+
+            $daysWithDates = [];
+            foreach ($filteredDatesBos as $date) {
+                $day = date('Y-m-d', strtotime($date));
+                $daysWithDates[$day][] = $date;
+            }
+            $index = 0;
+            // Her bir günün tarihlerini ayrı ayrı gösterme
+            foreach ($daysWithDates as $day => $dates) {
+
+                if ($index == 0) {
+                    $tableImage->text($day . ' | ' . '' . ' ' . "", 20, 150, function ($font) {
+                        $font->file(public_path('ProtestStrike-Regular.ttf'));
+                        $font->size(65);
+                        $font->color('#fff');
+                        $font->align('top-center');
+                        $font->valign('top');
+                    });
+                    $dateone = 2;
+                    foreach ($dates as $date) {
+                        $dateone++;
+                        list($reservationStartHour, $reservationStartMinute) = explode(':', substr($date, 11, 5));
+                        $formattedTime = $reservationStartHour . ':' . $reservationStartMinute . ' - ' . $reservationStartHour + 1 . ':' . $reservationStartMinute . ' ';
+
+                        $tableImage->text($formattedTime, 60, $dateone * 70, function ($font) {
+                            $font->file(public_path('ProtestStrike-Regular.ttf'));
+                            $font->size(44);
+                            $font->color('#fff');
+                            $font->align('center-left');
+                            $font->valign('top');
+                        });
+                    }
+                } else {
+
+                    $tableImage->text(' ' . $day . '' . ' ' . "", 370, 150, function ($font) {
+                        $font->file(public_path('ProtestStrike-Regular.ttf'));
+                        $font->size(65);
+                        $font->color('#fff');
+                        $font->align('center-left');
+                        $font->valign('top');
+                    });
+                    $datetwo = 2;
+                    foreach ($dates as $date) {
+                        $datetwo++;
+                        list($reservationStartHour, $reservationStartMinute) = explode(':', substr($date, 11, 5));
+                        $formattedTime = $reservationStartHour . ':' . $reservationStartMinute . ' - ' . $reservationStartHour + 1 . ':' . $reservationStartMinute . ' ';
+
+                        $tableImage->text($formattedTime, 410, $datetwo * 70, function ($font) {
+                            $font->file(public_path('ProtestStrike-Regular.ttf'));
+                            $font->size(44);
+                            $font->color('#fff');
+                            $font->align('center-left');
+                            $font->valign('top');
+                        });
+                    }
+
+
+
+
+
+
+                }
+                $index++;
+
+            }
+
+
+            $tableImage->save(public_path('bosssaatler.jpg'));
+
+            // Resmi tarayıcıya gönderme 
+            $imageContent = $tableImage->encode('jpg');
+
+            // Dosyayı sil
+            $deleteImagePath = public_path('bosssaatler.jpg');
+
+            // Başlık ekleyerek dosyayı indirme olarak ayarla
+            $response = response($imageContent)->header('Content-Type', 'image/jpeg')
+                ->header('Content-Disposition', 'attachment; filename="bosssaatler.jpg"');
+
+            // Dosyayı kaydet
+            $response->send();
+
+
+            return $response;
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 409,
+                'data' => "Hata"
+            ]);
+        }
     }
 
 

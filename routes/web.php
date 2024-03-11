@@ -60,15 +60,15 @@ Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('/halisahadelete/{id}', [HalisahaController::class, 'delete'])->name('halisaha.delete');
     Route::get('/halisahaeditpage/{id}', [HalisahaController::class, 'editpage'])->name('halisaha.editpage');
     Route::post('/halisahaupdate', [HalisahaController::class, 'update'])->name('halisaha.update');
-
+ 
     Route::get('/admin/users', [UserController::class, 'users'])->name('admin.users');
     Route::get('/admin/banks', [UserController::class, 'banks'])->name('admin.banks');
     Route::get('/admin/banksaddpage', [UserController::class, 'banksaddpage'])->name('admin.banksaddpage');
     Route::get('/admin/banksdelete/{id}', [UserController::class, 'banksdelete'])->name('admin.banksdelete');
 
     Route::post('/admin/banksadd', [UserController::class, 'banksadd'])->name('admin.banksadd');
+    Route::get('/downloadImages/{halisaha}', [CalenderController::class,'downloadImages'])->name('download.images');
 
-    
 
     
     

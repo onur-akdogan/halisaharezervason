@@ -290,7 +290,8 @@ class CalenderController extends Controller
     $tomorrow = Carbon::tomorrow()->startOfDay();
 
     $halisaha = \DB::table("halisaha")->where("id", $halisaha)->first();
-
+    $userName = \DB::table("users")->where("id", $halisaha->userId)->first();
+    
     $acilissaati = $halisaha->starthour;
     $kapanissaati = $halisaha->endhour;
     $macsuresi = $halisaha->macsuresi;
@@ -372,14 +373,22 @@ class CalenderController extends Controller
       return !in_array($dateBos, $datesdolu);
     });
 
+    
 
     $daysWithDates = [];
     foreach ($filteredDatesBos as $date) {
       $day = date('Y-m-d', strtotime($date));
-      $daysWithDates[$day][] = $date;
+      $daysWithDates[$day][] = $date;  
     }
-    $index = 0;
-    // Her bir günün tarihlerini ayrı ayrı gösterme
+    $index = 0; 
+    $tableImage->text($userName->name,360, 60, function ($font) { 
+      $font->file(public_path('ProtestStrike-Regular.ttf'));
+      $font->size(50);
+      $font->color('#fff');
+      $font->align('center'); 
+      $font->valign('center');
+    }); 
+    // Her bir günün tarihlerini ayrı ayrı gösterme 
     foreach ($daysWithDates as $day => $dates) {
 
       if ($index == 0) {

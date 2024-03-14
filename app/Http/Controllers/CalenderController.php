@@ -386,14 +386,14 @@ if($reservationStartHourFormatted>16){
       $daysWithDates[$day][] = $date;  
     }
     $index = 0; 
-    $tableImage->text($userName->name,360, 60, function ($font) { 
+    $tableImage->text($userName->name,360, 40, function ($font) { 
       $font->file(public_path('ProtestStrike-Regular.ttf'));
       $font->size(30);
       $font->color('#fff');
       $font->align('center'); 
       $font->valign('center');
     }); 
-    $tableImage->text($userName->phone,360, 60, function ($font) { 
+    $tableImage->text($userName->phone,360, 70, function ($font) { 
       $font->file(public_path('ProtestStrike-Regular.ttf'));
       $font->size(30);
       $font->color('#fff');

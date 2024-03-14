@@ -388,7 +388,14 @@ if($reservationStartHourFormatted>16){
     $index = 0; 
     $tableImage->text($userName->name,360, 60, function ($font) { 
       $font->file(public_path('ProtestStrike-Regular.ttf'));
-      $font->size(50);
+      $font->size(30);
+      $font->color('#fff');
+      $font->align('center'); 
+      $font->valign('center');
+    }); 
+    $tableImage->text($userName->phone,360, 60, function ($font) { 
+      $font->file(public_path('ProtestStrike-Regular.ttf'));
+      $font->size(30);
       $font->color('#fff');
       $font->align('center'); 
       $font->valign('center');

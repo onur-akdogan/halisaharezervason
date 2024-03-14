@@ -358,13 +358,18 @@ class CalenderController extends Controller
         foreach ($events as $event) {
           // Tarih ve saatleri karşılaştırırken, dakika kısmını da ekleyin
           if ($event->date == $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00") {
+            if($reservationStartHourFormatted>16){
             $datesdolu[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
+        
             $reserved = true;
+          }
           }
         }
 
-
-        $datesbos[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
+if($reservationStartHourFormatted>16){
+  $datesbos[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
+}
+       // $datesbos[] = $day["tarih"] . " " . $reservationStartHourFormatted . ":" . $reservationStartMinuteFormatted . ":00";
 
       }
     }
@@ -372,7 +377,7 @@ class CalenderController extends Controller
     $filteredDatesBos = array_filter($datesbos, function ($dateBos) use ($datesdolu) {
       return !in_array($dateBos, $datesdolu);
     });
-
+ 
     
 
     $daysWithDates = [];
